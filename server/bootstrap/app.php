@@ -25,7 +25,7 @@ $app = new Laravel\Lumen\Application(
 
 // $app->withFacades();
 
-// $app->withEloquent();
+$app->withEloquent();
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +71,10 @@ $app->configure('app');
 | route or middleware that'll be assigned to some specific routes.
 |
 */
+
+$app->middleware([
+  App\Http\Middleware\CorsMiddleware::class
+]);
 
 // $app->middleware([
 //     App\Http\Middleware\ExampleMiddleware::class
