@@ -8,13 +8,13 @@ class ListStudentsService {
   /**
    * @return array
    */
-  public function run() {
+  public function run($limit = 10, $name = null) {
     $studentsModel = new Students();
 
     $students = $studentsModel
       ->all(['nome', 'aluno_id'])
       ->groupBy('aluno_id')
-      ->take(5);
+      ->take($limit);
 
     $response = [];
 
