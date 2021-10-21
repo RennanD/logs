@@ -9,12 +9,13 @@ class ShowStudentService {
   /**
    * @return array
    */
-  public function run($aluno_id, $limit = 100) {
+  public function run($aluno_id, $limit = 100, $url = '') {
     $studentsModel = new Students();
 
     $logs = $studentsModel
     ->query()
     ->where('aluno_id', '=', $aluno_id)
+    ->where('url', 'like', '%'.$url.'%')
     ->paginate($limit);
 
     $response = [];

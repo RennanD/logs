@@ -10,10 +10,11 @@ class ShowStudentController extends Controller {
 
     $aluno_id = $request->student_id;
     $limit = $request->query('limit');
+    $url = $request->query('url');
 
     $showStudentLogs = new ShowStudentService();
 
-    $logs = $showStudentLogs->run($aluno_id, $limit);
+    $logs = $showStudentLogs->run($aluno_id, $limit, $url);
 
     return response()->json($logs);
   }
