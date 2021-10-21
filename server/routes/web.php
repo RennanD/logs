@@ -10,6 +10,8 @@ $router->get('/teste', function () {
 
 $router->group(['prefix' => '/students'], function () use ($router) {
   $router->get('/', 'ListStudentsController@handle');
+
+  $router->get('/{student_id}', 'ShowStudentController@handle');
 });
 
 $router->group(['prefix' => '/admins'], function () use ($router) {
