@@ -2,26 +2,30 @@
 
 namespace App\Services;
 
+use App\Http\Resources\StudentsCollection;
 use App\Models\Students;
 
 class ListStudentsService {
   /**
    * @return array
    */
-  public function run($limit = 10, $name = null) {
+  public function run($limit = 10, $search = '') {
     $studentsModel = new Students();
 
     $students = $studentsModel
-      ->all(['nome', 'aluno_id'])
-      ->groupBy('aluno_id')
-      ->take($limit);
+    ->query()
+    ->where('nome', 'like', '%'.$search.'%')
+    ->orWhere('aluno_id', 'like', '%'.$search.'%')
+    ->groupBy('aluno_id')
+    ->orderBy('nome', 'ASC')
+    ->paginate($limit);
 
-    $response = [];
+    $studentsCollection = new StudentsCollection($students);
 
-    foreach($students as $student) {
-      $response[] = $student[0];
-    }
-
-    return $response;
+    return [
+      "result" => $studentsCollection->collection($students),
+      "current_page" => $students->currentPage(),
+      "last_page" => $students->lastPage()
+    ];
   }
 }

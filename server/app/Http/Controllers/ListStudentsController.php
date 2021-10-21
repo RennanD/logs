@@ -9,13 +9,13 @@ class ListStudentsController extends Controller {
   public function handle(Request $request) {
 
     $limit = $request->query('limit');
-    $name = $request->query('name');
+    $search = $request->query('search');
 
     // dd($name);
 
     $listStudents = new ListStudentsService();
 
-    $students = $listStudents->run($limit, $name);
+    $students = $listStudents->run($limit, $search);
 
     return response()->json($students);
   }
