@@ -1,0 +1,28 @@
+:root {
+  --background-color: #090914;
+
+  --white100: #fff;
+  --white90: #f1f5fb;
+
+  --blue90: #0C1A32;
+  --blue80: #4f46ba;
+  --blue30: #c1cee5;
+
+  --black80: #202020;
+
+  --yellow90: #FFC312;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  outline: 0;
+  box-sizing: border-box;
+}
+
+
+body {
+  background-color: var(--background-color);
+  color: var(--white90);
+  font-family: Roboto, sans-serif;
+}

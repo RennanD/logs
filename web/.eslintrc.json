@@ -26,7 +26,9 @@
   "rules": {
     "prettier/prettier": "error",
     "react-hooks/rules-of-hooks": "error",
+    "jsx-a11y/img-redundant-alt": "off",
     "react-hooks/exhaustive-deps": "warn",
+    "import/prefer-default-export": "off",
     "react/jsx-filename-extension": [
       1,
       {
