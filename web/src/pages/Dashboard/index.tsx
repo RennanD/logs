@@ -1,3 +1,5 @@
+import { useHistory } from 'react-router-dom';
+
 import styles from './styles.module.scss';
 
 import heroImage from '../../assets/logs.svg';
@@ -6,6 +8,12 @@ import studentsImage from '../../assets/students.svg';
 import adminsImage from '../../assets/admins.svg';
 
 export function Dashboard(): JSX.Element {
+  const history = useHistory();
+
+  function handleNavigate(route: string) {
+    history.push(route);
+  }
+
   return (
     <div className={styles.container}>
       <header className={styles.heahderContent}>
@@ -47,7 +55,9 @@ export function Dashboard(): JSX.Element {
               <span>Monitorar acesso dos alunos ao sistema</span>
             </div>
             <footer>
-              <button type="button">Acessar</button>
+              <button onClick={() => handleNavigate('/students')} type="button">
+                Acessar
+              </button>
             </footer>
           </li>
 

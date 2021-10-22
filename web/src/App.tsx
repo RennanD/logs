@@ -1,5 +1,5 @@
-import { Dashboard } from './pages/Dashboard';
+import { Routes } from './routes';
 
 export function App() {
-  return <Dashboard />;
+  return <Routes />;
 }
