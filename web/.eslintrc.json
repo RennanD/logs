@@ -29,6 +29,7 @@
     "jsx-a11y/img-redundant-alt": "off",
     "react-hooks/exhaustive-deps": "warn",
     "import/prefer-default-export": "off",
+    "camelcase": "off",
     "react/jsx-filename-extension": [
       1,
       {

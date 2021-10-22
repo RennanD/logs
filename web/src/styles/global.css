@@ -26,3 +26,7 @@ body {
   color: var(--white90);
   font-family: Roboto, sans-serif;
 }
+
+a {
+  text-decoration: none;
+}
