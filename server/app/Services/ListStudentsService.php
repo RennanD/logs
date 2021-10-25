@@ -15,8 +15,8 @@ class ListStudentsService {
     $students = $studentsModel
     ->query()
     ->where('nome', 'like', '%'.$search.'%')
-    ->orWhere('aluno_id', 'like', '%'.$search.'%')
-    ->groupBy('aluno_id')
+    ->orWhere('aluno_id_keep', 'like', '%'.$search.'%')
+    // ->groupBy('aluno_id')
     ->orderBy('nome', 'ASC')
     ->paginate($limit);
 

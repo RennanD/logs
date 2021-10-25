@@ -8,7 +8,7 @@ class StudentsCollection extends JsonResource {
   public function toArray($request) {
     return [
       "nome" => $this->resource->nome,
-      "aluno_id" => $this->resource->aluno_id,
+      "aluno_id" => $this->resource->aluno_id_keep,
     ];
   }
 }
