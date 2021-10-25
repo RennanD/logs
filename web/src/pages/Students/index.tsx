@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 import { FiEye, FiSearch } from 'react-icons/fi';
 
@@ -14,16 +14,30 @@ type Student = {
 
 type AxiosResponse = {
   result: Student[];
+  current_page: number;
+  last_page: number;
 };
 
 export function Students(): JSX.Element {
   const [students, setStudents] = useState<Student[]>([]);
+  const [lastPage, setLastPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState(true);
 
-  const pages = [1, 2, 3, 4, 5, 6, 7];
+  // const pages = useMemo(() => {
+  //   const arrayPages = [];
+  //   for (let count = currentPage; count >= lastPage; count + 1) {
+  //     if (arrayPages.length < 10) {
+  //       arrayPages.push(count);
+  //     }
+  //   }
+
+  //   return
+  // }, [currentPage, lastPage]);
+
+  const pages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   function handleChangePage(page: number) {
     setCurrentPage(page);
@@ -40,6 +54,8 @@ export function Students(): JSX.Element {
       })
       .then(response => {
         setStudents(response.data.result);
+        setCurrentPage(response.data.current_page);
+        setCurrentPage(response.data.last_page);
         setLoading(false);
       });
   }, [search, limit, currentPage]);
