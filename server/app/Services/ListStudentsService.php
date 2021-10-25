@@ -20,12 +20,20 @@ class ListStudentsService {
     ->orderBy('nome', 'ASC')
     ->paginate($limit);
 
+    $countStudents = $studentsModel
+      ->query()
+      ->where('nome', 'like', '%'.$search.'%')
+      ->orWhere('aluno_id_keep', 'like', '%'.$search.'%')
+      ->get()
+      ->count();
+
     $studentsCollection = new StudentsCollection($students);
 
     return [
       "result" => $studentsCollection->collection($students),
       "current_page" => $students->currentPage(),
-      "last_page" => $students->lastPage()
+      "last_page" => $students->lastPage(),
+      "count" => $countStudents
     ];
   }
 }
