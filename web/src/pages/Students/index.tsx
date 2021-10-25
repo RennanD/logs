@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import { FiEye, FiSearch, FiX } from 'react-icons/fi';
+import { FiEye, FiSearch } from 'react-icons/fi';
 
 import styles from './styles.module.scss';
 import { api } from '../../services/api';
@@ -18,39 +18,21 @@ type AxiosResponse = {
 
 export function Students(): JSX.Element {
   const [students, setStudents] = useState<Student[]>([]);
-  const [searchStudents, setSearchStudents] = useState<Student[]>([]);
   const [search, setSearch] = useState('');
-  const [hasSearch, setHasSearch] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [lastSearch, setLastSearch] = useState('');
-
-  async function handleSearch() {
-    setLoading(true);
-    const response = await api.get<AxiosResponse>('/students', {
-      params: {
-        search,
-      },
-    });
-
-    setSearchStudents(response.data.result);
-    setHasSearch(!!search);
-    setLastSearch(search);
-    setLoading(false);
-  }
-
-  async function handleCleanSearch() {
-    setSearch('');
-    setHasSearch(false);
-    setSearchStudents(students);
-  }
 
   useEffect(() => {
-    api.get<AxiosResponse>('/students').then(response => {
-      setStudents(response.data.result);
-      setSearchStudents(response.data.result);
-      setLoading(false);
-    });
-  }, []);
+    api
+      .get<AxiosResponse>('/students', {
+        params: {
+          search,
+        },
+      })
+      .then(response => {
+        setStudents(response.data.result);
+        setLoading(false);
+      });
+  }, [search]);
 
   return (
     <div className={styles.container}>
@@ -65,14 +47,6 @@ export function Students(): JSX.Element {
         <header>
           <article>
             <h2>Listam de alunos</h2>
-            {hasSearch && (
-              <div className={styles.searchLabel}>
-                <span>Você pesquisou por: {`"${lastSearch}"`}</span>
-                <button onClick={handleCleanSearch} type="button">
-                  <FiX size={14} />
-                </button>
-              </div>
-            )}
           </article>
 
           <div>
@@ -82,10 +56,8 @@ export function Students(): JSX.Element {
               placeholder="Pesquisar..."
               onChange={event => setSearch(event.target.value)}
             />
-            <button onClick={handleSearch} type="button">
-              Buscar
-              <FiSearch size={16} />
-            </button>
+
+            <FiSearch size={20} />
           </div>
         </header>
 
@@ -101,7 +73,7 @@ export function Students(): JSX.Element {
               </tr>
             </thead>
             <tbody>
-              {searchStudents.map(student => (
+              {students.map(student => (
                 <tr key={student.aluno_id}>
                   <td>{student.aluno_id}</td>
                   <td>{student.nome}</td>
