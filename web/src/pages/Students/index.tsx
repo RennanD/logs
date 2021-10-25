@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 
 import { FiEye, FiSearch } from 'react-icons/fi';
 
@@ -19,6 +18,7 @@ type AxiosResponse = {
 export function Students(): JSX.Element {
   const [students, setStudents] = useState<Student[]>([]);
   const [search, setSearch] = useState('');
+  const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,27 +26,21 @@ export function Students(): JSX.Element {
       .get<AxiosResponse>('/students', {
         params: {
           search,
+          limit,
         },
       })
       .then(response => {
         setStudents(response.data.result);
         setLoading(false);
       });
-  }, [search]);
+  }, [search, limit]);
 
   return (
     <div className={styles.container}>
-      <header className={styles.headerContent}>
-        <Link to="/">
-          <h1>
-            Log Monitor <span>.</span>
-          </h1>
-        </Link>
-      </header>
       <main className={styles.mainContent}>
         <header>
           <article>
-            <h2>Listam de alunos</h2>
+            <h2>Listagem de alunos</h2>
           </article>
 
           <div>

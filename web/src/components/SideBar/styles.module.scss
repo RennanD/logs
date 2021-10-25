@@ -6,11 +6,12 @@
 
   a {
     color: var(--gray5);
+    > h1 span {
+      color: var(--yellow90);
+    }
   }
 
-  > h1 span {
-    color: var(--yellow90);
-  }
+  
 
   section {
     margin-top: 50px;
@@ -35,7 +36,6 @@
             margin-right: 10px;
           }
         }
-
         
       }
       

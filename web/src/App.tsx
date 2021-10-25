@@ -8,7 +8,9 @@ export function App() {
   return (
     <BrowserRouter>
       <div className={styles.container}>
-        <SideBar />
+        <section>
+          <SideBar />
+        </section>
         <main>
           <Routes />
         </main>

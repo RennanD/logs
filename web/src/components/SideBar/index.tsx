@@ -1,5 +1,5 @@
 import { RiDashboardLine, RiUserLine, RiGroupLine } from 'react-icons/ri';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 import styles from './styles.module.scss';
 
@@ -34,9 +34,11 @@ export function SideBar(): JSX.Element {
 
   return (
     <aside className={styles.container}>
-      <h1>
-        Log Monitor <span>.</span>
-      </h1>
+      <Link to="/">
+        <h1>
+          Log Monitor <span>.</span>
+        </h1>
+      </Link>
 
       {navigation.map(navItem => (
         <>
