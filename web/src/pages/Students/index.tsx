@@ -5,6 +5,7 @@ import { FiEye, FiSearch } from 'react-icons/fi';
 import styles from './styles.module.scss';
 import { api } from '../../services/api';
 import { LoadingTable } from '../../components/LoadingTable';
+import { Pagination } from '../../components/Pagination';
 
 type Student = {
   aluno_id: string;
@@ -17,9 +18,16 @@ type AxiosResponse = {
 
 export function Students(): JSX.Element {
   const [students, setStudents] = useState<Student[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState(true);
+
+  const pages = [1, 2, 3, 4, 5, 6, 7];
+
+  function handleChangePage(page: number) {
+    setCurrentPage(page);
+  }
 
   useEffect(() => {
     api
@@ -27,13 +35,14 @@ export function Students(): JSX.Element {
         params: {
           search,
           limit,
+          page: currentPage,
         },
       })
       .then(response => {
         setStudents(response.data.result);
         setLoading(false);
       });
-  }, [search, limit]);
+  }, [search, limit, currentPage]);
 
   return (
     <div className={styles.container}>
@@ -58,31 +67,38 @@ export function Students(): JSX.Element {
         {loading ? (
           <LoadingTable />
         ) : (
-          <table>
-            <thead>
-              <tr>
-                <th>#ID</th>
-                <th>Nome</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {students.map(student => (
-                <tr key={student.aluno_id}>
-                  <td>{student.aluno_id}</td>
-                  <td>{student.nome}</td>
-                  <td>
-                    <div>
-                      <a href="/">
-                        <FiEye size={16} />
-                        Visualizar
-                      </a>
-                    </div>
-                  </td>
+          <>
+            <table>
+              <thead>
+                <tr>
+                  <th>#ID</th>
+                  <th>Nome</th>
+                  <th>Ações</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {students.map(student => (
+                  <tr key={student.aluno_id}>
+                    <td>{student.aluno_id}</td>
+                    <td>{student.nome}</td>
+                    <td>
+                      <div>
+                        <a href="/">
+                          <FiEye size={16} />
+                          Visualizar
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <Pagination
+              pages={pages}
+              activePage={currentPage}
+              onClick={handleChangePage}
+            />
+          </>
         )}
       </main>
     </div>
