@@ -8,7 +8,7 @@ export function AppRoutes(): JSX.Element {
   return (
     <Switch>
       <Route path="/" exact component={Dashboard} />
-      <Route path="/students" component={Students} />
+      <Route path="/students" exact component={Students} />
     </Switch>
   );
 }
