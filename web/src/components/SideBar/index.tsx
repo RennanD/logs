@@ -12,6 +12,7 @@ export function SideBar(): JSX.Element {
           path: '/',
           title: 'Dashboard',
           icon: <RiDashboardLine />,
+          exact: true,
         },
       ],
     },
@@ -22,11 +23,13 @@ export function SideBar(): JSX.Element {
           path: '/students',
           title: 'Listar Alunos',
           icon: <RiUserLine />,
+          exact: false,
         },
         {
           path: '/admins',
           title: 'Listar Admins',
           icon: <RiGroupLine />,
+          exact: false,
         },
       ],
     },
@@ -48,7 +51,7 @@ export function SideBar(): JSX.Element {
               {navItem.links.map(link => (
                 <li key={link.path}>
                   <NavLink
-                    exact
+                    exact={link.exact}
                     activeStyle={{
                       color: '#FFC312',
                     }}

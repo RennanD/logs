@@ -1,7 +1,8 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 
-import { FiEye, FiSearch } from 'react-icons/fi';
+import { FiArrowLeft, FiArrowUpLeft, FiEye, FiSearch } from 'react-icons/fi';
 
+import { Link } from 'react-router-dom';
 import styles from './styles.module.scss';
 import { api } from '../../services/api';
 import { LoadingTable } from '../../components/LoadingTable';
@@ -20,7 +21,6 @@ type AxiosResponse = {
 
 export function Students(): JSX.Element {
   const [students, setStudents] = useState<Student[]>([]);
-  const [lastPage, setLastPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
   const [limit, setLimit] = useState(10);
@@ -55,7 +55,6 @@ export function Students(): JSX.Element {
       .then(response => {
         setStudents(response.data.result);
         setCurrentPage(response.data.current_page);
-        setCurrentPage(response.data.last_page);
         setLoading(false);
       });
   }, [search, limit, currentPage]);
@@ -65,6 +64,9 @@ export function Students(): JSX.Element {
       <main className={styles.mainContent}>
         <header>
           <article>
+            <Link to="/">
+              <FiArrowLeft size={30} />
+            </Link>
             <h2>Listagem de alunos</h2>
           </article>
 
@@ -99,10 +101,10 @@ export function Students(): JSX.Element {
                     <td>{student.nome}</td>
                     <td>
                       <div>
-                        <a href="/">
+                        <Link to={`/students/${student.aluno_id}/logs`}>
                           <FiEye size={16} />
                           Visualizar
-                        </a>
+                        </Link>
                       </div>
                     </td>
                   </tr>

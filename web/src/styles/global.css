@@ -44,7 +44,7 @@ a {
 
 * {
   scrollbar-width: auto;
-  scrollbar-color: var(--yellow90) var(--background-color);
+  scrollbar-color: var(--yellow90) var(--gray90);
 }
 
 *::-webkit-scrollbar {
@@ -52,12 +52,12 @@ a {
 }
 
 *::-webkit-scrollbar-track {
-  background: var(--background-color);
+  background: var(--gray90);
 }
 
 *::-webkit-scrollbar-thumb {
   background-color: var(--yellow90);
   border-radius: 10px;
-  border: 3px solid var(--background-color);
+  border: 3px solid var(--gray90);
 }
 
