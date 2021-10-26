@@ -102,7 +102,7 @@ export function Pagination({
           <li>
             <button
               className={
-                String(activePage) === pages.first ? styles.activePage : ''
+                String(activePage) === pages.second ? styles.activePage : ''
               }
               type="button"
             >
@@ -112,7 +112,7 @@ export function Pagination({
           <li>
             <button
               className={
-                String(activePage) === pages.first ? styles.activePage : ''
+                String(activePage) === pages.third ? styles.activePage : ''
               }
               type="button"
             >
@@ -122,7 +122,7 @@ export function Pagination({
           <li>
             <button
               className={
-                String(activePage) === pages.first ? styles.activePage : ''
+                String(activePage) === pages.fourth ? styles.activePage : ''
               }
               type="button"
             >
