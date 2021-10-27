@@ -3,18 +3,18 @@ import multer from 'multer';
 
 import path from 'path';
 
-export default {
-  upload() {
-    return {
-      storage: multer.diskStorage({
-        destination: path.resolve(__dirname, '..', '..', 'tmp'),
-        filename: (request, file, callback) => {
-          const fileHash = crypto.randomBytes(16).toString('hex');
-          const fileName = `${fileHash}-${file.originalname}`;
+const tmpFolder = path.resolve(__dirname, '..', '..', 'tmp');
 
-          return callback(null, fileName);
-        },
-      }),
-    };
-  },
+export default {
+  directory: tmpFolder,
+
+  storage: multer.diskStorage({
+    destination: tmpFolder,
+    filename: (req, file, cb) => {
+      const fileHash = crypto.randomBytes(10).toString('hex');
+      const fileName = `${fileHash}-${file.originalname}`;
+
+      return cb(null, fileName);
+    },
+  }),
 };
