@@ -1,7 +1,7 @@
 .container {
   height: 100vh;
   display: grid;
-  grid-template-columns: 250px 3fr;
+  grid-template-columns: 0.7fr 3fr;
   gap: 10px;
 
   > main {
@@ -11,6 +11,6 @@
   }
   
   > section {
-    overflow: hidden;
+    display: flex;
   }
 }
