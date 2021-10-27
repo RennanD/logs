@@ -1,8 +1,11 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema, Document } from 'mongoose';
 
 export interface IStudentLogSchema extends Document {
-  student_id_keep: string;
   name: string;
+  student_id_keep: string;
+  url: string;
+  ip: string;
+  date: Date;
 }
 
 const StudentLogSchema = new Schema(

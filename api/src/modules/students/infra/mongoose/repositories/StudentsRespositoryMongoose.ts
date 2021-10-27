@@ -36,9 +36,6 @@ export class StudentsRespositoryMongoose implements IStudentsRepository {
   }
 
   async save(student: IStudentsSchema): Promise<void> {
-    const upadetedUser = await Student.findById(student._id);
-    if (upadetedUser) {
-      Object.assign(upadetedUser, { ...student });
-    }
+    await student.save();
   }
 }
