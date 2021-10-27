@@ -1,6 +1,10 @@
+import 'reflect-metadata';
+
 import express from 'express';
 
-// import '../mongoose/database';
+import '../mongoose/database';
+
+import '../container';
 
 import { routes } from './routes';
 

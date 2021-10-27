@@ -11,7 +11,7 @@ const StudentSchema = new Schema(
       type: String,
       required: true,
     },
-    student_keep_id: {
+    student_id_keep: {
       type: String,
       required: true,
     },

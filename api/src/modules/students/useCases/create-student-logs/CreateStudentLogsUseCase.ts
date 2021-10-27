@@ -1,8 +1,13 @@
+import { inject, injectable } from 'tsyringe';
 import { ICreateStudentLogDTO } from '../../dtos/ICreateStudentLogDTO';
 import { IStudentLogsRepository } from '../../repositories/IStudentLogsRepository';
 
+@injectable()
 export class CreateStudentLogsUseCase {
-  constructor(private studentLogsRepository: IStudentLogsRepository) {}
+  constructor(
+    @inject('StudentLogsRepository')
+    private studentLogsRepository: IStudentLogsRepository,
+  ) {}
 
   async run({
     name,
