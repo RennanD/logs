@@ -1,4 +1,7 @@
 import express from 'express';
+
+// import '../mongoose/database';
+
 import { routes } from './routes';
 
 const app = express();
@@ -7,6 +10,6 @@ app.use(express.json());
 
 app.use(routes);
 
-app.listen(process.env.PORT || 4000, () => {
+app.listen(3333, () => {
   console.log('Server runing 🚀');
 });
