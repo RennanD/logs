@@ -1,6 +1,7 @@
 import { model, Schema } from 'mongoose';
 
 export interface IStudentsSchema extends Document {
+  _id: Schema.Types.ObjectId;
   student_id_keep: string;
   name: string;
 }
