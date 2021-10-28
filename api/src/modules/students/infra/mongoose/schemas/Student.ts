@@ -15,13 +15,6 @@ const StudentSchema = new Schema(
       type: String,
       required: true,
     },
-    student_logs: [
-      {
-        type: Schema.Types.ObjectId,
-        required: false,
-        ref: 'StudentLog',
-      },
-    ],
   },
   {
     timestamps: true,
