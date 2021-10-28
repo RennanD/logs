@@ -8,17 +8,20 @@ import { ImportStudentsController } from '../../../modules/students/useCases/imp
 import uploadConfig from '../../../configs/upload';
 import { ImportStudentLogsController } from '../../../modules/students/useCases/import-student-logs/ImportStudentLogsController';
 import { ListStudentsController } from '../../../modules/students/useCases/list-students/ListStudentsController';
+import { ListStudentLogsController } from '../../../modules/students/useCases/list-student-logs/ListStudentLogsController';
 
 const studentsRouter = Router();
 const upload = multer(uploadConfig);
 
 const listStudentsController = new ListStudentsController();
+const listStudentLogsController = new ListStudentLogsController();
 
 const createStudentLogsController = new CreateStudentLogsController();
 const importStudentsController = new ImportStudentsController();
 const importStudentLogsController = new ImportStudentLogsController();
 
 studentsRouter.get('/', listStudentsController.handle);
+studentsRouter.get('/:student_id_keep/logs', listStudentLogsController.handle);
 
 studentsRouter.post(
   '/import',
