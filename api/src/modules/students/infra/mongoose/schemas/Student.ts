@@ -3,6 +3,7 @@ import { model, Schema, Document } from 'mongoose';
 export interface IStudentsSchema extends Document {
   student_id_keep: string;
   name: string;
+  student_logs: Schema.Types.ObjectId[];
 }
 
 const StudentSchema = new Schema(
@@ -15,6 +16,13 @@ const StudentSchema = new Schema(
       type: String,
       required: true,
     },
+    student_logs: [
+      {
+        type: Schema.Types.ObjectId,
+        required: false,
+        ref: 'StudentLog',
+      },
+    ],
   },
   {
     timestamps: true,
