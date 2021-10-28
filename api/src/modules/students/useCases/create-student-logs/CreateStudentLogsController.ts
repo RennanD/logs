@@ -10,10 +10,6 @@ export class CreateStudentLogsController {
 
     const { name, url, ip, date, student_id_keep } = request.body;
 
-    // console.log(student_id_keep);
-
-    // console.log(this.createStudentLogs);
-
     await createStudents.run({ name, student_id_keep });
 
     await createStudentLogs.run({
