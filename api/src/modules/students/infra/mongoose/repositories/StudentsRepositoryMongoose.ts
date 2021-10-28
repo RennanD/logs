@@ -6,12 +6,21 @@ import {
 
 import Student, { IStudentsSchema } from '../schemas/Student';
 
-export class StudentsRespositoryMongoose implements IStudentsRepository {
+export class StudentsRepositoryMongoose implements IStudentsRepository {
   async findAll(params?: IFindStudentParams): Promise<IStudentsSchema[]> {
     return Student.find({
-      name: params?.name,
-      student_id_keep: params?.student_id_keep,
-    });
+      name: { $regex: params?.name || '', $options: 'i' },
+      student_id_keep: { $regex: params?.student_id_keep || '', $options: 'i' },
+    })
+      .skip(Number(params?.offset) || 0)
+      .limit(Number(params?.limit) || 10);
+  }
+
+  async countAll(params?: IFindStudentParams): Promise<number> {
+    return Student.find({
+      name: { $regex: params?.name || '', $options: 'i' },
+      student_id_keep: { $regex: params?.student_id_keep || '', $options: 'i' },
+    }).count();
   }
 
   async findById(id: string): Promise<IStudentsSchema | null> {
