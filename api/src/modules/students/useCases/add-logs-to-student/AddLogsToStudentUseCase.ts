@@ -14,7 +14,7 @@ export class AddLogsToStudentUseCase {
   async run(): Promise<void> {
     const students = await this.studentRepository.findAll({
       limit: 200,
-      offset: 1000,
+      offset: 1200,
     });
 
     // console.log(students);
