@@ -7,4 +7,8 @@ import { ImportStudentLogsJob } from '../../modules/students/jobs/ImportStudentL
 
 const importStudentLogsJob = container.resolve(ImportStudentLogsJob);
 
-importQueue.process(importStudentLogsJob.handle);
+importQueue.process(async (job, done) => {
+  console.log(job.data);
+
+  await importStudentLogsJob.handle(job.data.file);
+});

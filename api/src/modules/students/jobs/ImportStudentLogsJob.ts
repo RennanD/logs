@@ -14,7 +14,8 @@ interface IImportStudentLogs {
 }
 
 interface IHandleRequest {
-  file: Express.Multer.File;
+  student_id_keep: string;
+  logs: IImportStudentLogs[];
 }
 
 @injectable()
@@ -61,20 +62,22 @@ export class ImportStudentLogsJob {
     });
   }
 
-  async handle({ file }: IHandleRequest): Promise<void> {
-    console.log(file);
-    const studentLogs = await this.loadStudents(file);
-
-    studentLogs.map(async studentLog => {
-      const { name, student_id_keep, ip, url, date } = studentLog;
-
-      this.studentLogsRepository.create({
-        name,
-        student_id_keep,
-        ip,
-        url,
-        date,
-      });
+  async handle({ student_id_keep, logs }: IHandleRequest): Promise<void> {
+    console.log({
+      student_id_keep,
+      logs,
     });
+
+    // const studentLogs = await this.loadStudents(file);
+    // studentLogs.map(async studentLog => {
+    //   const { name, student_id_keep, ip, url, date } = studentLog;
+    //   await this.studentLogsRepository.create({
+    //     name,
+    //     student_id_keep,
+    //     ip,
+    //     url,
+    //     date,
+    //   });
+    // });
   }
 }

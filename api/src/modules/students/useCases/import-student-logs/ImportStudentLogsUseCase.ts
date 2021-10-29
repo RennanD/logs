@@ -3,6 +3,7 @@ import csvParse from 'csv-parse';
 
 import { inject, injectable } from 'tsyringe';
 import { IStudentLogsRepository } from '../../repositories/IStudentLogsRepository';
+import { importQueue } from '../../infra/lib/Queue';
 
 interface IImportStudentLogs {
   name: string;
@@ -53,16 +54,12 @@ export class ImportStudentLogsUseCase {
   async run(file: Express.Multer.File): Promise<void> {
     const studentLogs = await this.loadStudents(file);
 
-    studentLogs.map(async studentLog => {
-      const { name, student_id_keep, ip, url, date } = studentLog;
+    const logs = studentLogs.filter(log => log.student_id_keep === '4115');
 
-      this.studentLogsRepository.create({
-        name,
-        student_id_keep,
-        ip,
-        url,
-        date,
-      });
-    });
+    console.log(logs.length);
+
+    await importQueue.add({ studentd_id_keep: '4115', logs });
+
+    // console.log('teste')
   }
 }
