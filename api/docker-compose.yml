@@ -18,17 +18,17 @@ services:
     environment:
       - ALLOW_EMPTY_PASSWORD=true
 
-  api: 
-    build: .
-    container_name: api_logs
-    ports: 
-      - 3333:3333
-    volumes: 
-      - .:/usr/app
-    links:
-      - mongo_logs
-    depends_on:
-      - mongo_logs
+  # api: 
+  #   build: .
+  #   container_name: api_logs
+  #   ports: 
+  #     - 3333:3333
+  #   volumes: 
+  #     - .:/usr/app
+  #   links:
+  #     - mongo_logs
+  #   depends_on:
+  #     - mongo_logs
 
 
 volumes: 

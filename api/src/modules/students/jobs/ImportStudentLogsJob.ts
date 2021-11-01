@@ -62,13 +62,11 @@ export class ImportStudentLogsJob {
     });
   }
 
-  async handle({ student_id_keep, logs }: IHandleRequest): Promise<void> {
-    console.log({
-      student_id_keep,
-      logs,
-    });
+  async handle(file: Express.Multer.File): Promise<void> {
+    const studentLogs = await this.loadStudents(file);
 
-    // const studentLogs = await this.loadStudents(file);
+    console.log(studentLogs);
+
     // studentLogs.map(async studentLog => {
     //   const { name, student_id_keep, ip, url, date } = studentLog;
     //   await this.studentLogsRepository.create({
