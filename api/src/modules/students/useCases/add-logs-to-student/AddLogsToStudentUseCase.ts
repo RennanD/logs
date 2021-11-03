@@ -2,6 +2,8 @@ import { inject, injectable } from 'tsyringe';
 import { IStudentLogsRepository } from '../../repositories/IStudentLogsRepository';
 import { IStudentsRepository } from '../../repositories/IStudentsRepository';
 
+import { IAddLogsToStudentsJob } from '../../jobs/IAddLogsToStudentsJob';
+
 @injectable()
 export class AddLogsToStudentUseCase {
   constructor(
@@ -11,30 +13,26 @@ export class AddLogsToStudentUseCase {
     private studentLogsRepository: IStudentLogsRepository,
   ) {}
 
-  async run(): Promise<void> {
-    const students = await this.studentRepository.findAll({
-      limit: 200,
-      offset: 1200,
-    });
+  async run({ student_id_keep, logs }: IAddLogsToStudentsJob): Promise<void> {
+    const student = await this.studentRepository.findByKeepId(student_id_keep);
 
-    // console.log(students);
+    if (student) {
+      await this.studentLogsRepository.createMany(logs);
 
-    students.forEach(async (student, index) => {
-      // console.log(student);
-
-      const logs = await this.studentLogsRepository.findAllByKeepId(
-        student.student_id_keep,
-        {
-          limit: 4000,
-        },
+      const totalLogs = await this.studentLogsRepository.countAll(
+        student_id_keep,
       );
 
-      const logs_id = logs.map(log => log._id);
+      const studentLogs = await this.studentLogsRepository.findAllByKeepId(
+        student_id_keep,
+        { limit: totalLogs },
+      );
 
-      student.student_logs = logs_id;
+      const parsedLogs = studentLogs.map(log => log._id);
+
+      student.student_logs = parsedLogs;
 
       await this.studentRepository.save(student);
-      console.log(`foi ${index}\n `);
-    });
+    }
   }
 }

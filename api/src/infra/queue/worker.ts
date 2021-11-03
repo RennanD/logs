@@ -5,13 +5,15 @@ import '../mongoose/database';
 import { container } from 'tsyringe';
 import { BullProvider } from '../providers/implementations/queue/BullProvider';
 
-import { IImportStudentLogs } from '../../modules/students/jobs/IImportStudentLogs';
-import { ImportStudentLogsUseCase } from '../../modules/students/useCases/import-student-logs/ImportStudentLogsUseCase';
+import { IAddLogsToStudentsJob } from '../../modules/students/jobs/IAddLogsToStudentsJob';
+import { AddLogsToStudentUseCase } from '../../modules/students/useCases/add-logs-to-student/AddLogsToStudentUseCase';
 
-const importQueueProvider = new BullProvider('import-queue');
+const importQueueProvider = new BullProvider('import-student-logs-queue');
 
-importQueueProvider.process<IImportStudentLogs>(async job => {
-  const importStudentLogs = container.resolve(ImportStudentLogsUseCase);
+importQueueProvider.process<IAddLogsToStudentsJob>(async job => {
+  const { student_id_keep, logs } = job;
 
-  await importStudentLogs.run(job.file);
+  const addLogsToStudent = container.resolve(AddLogsToStudentUseCase);
+
+  await addLogsToStudent.run({ student_id_keep, logs });
 });

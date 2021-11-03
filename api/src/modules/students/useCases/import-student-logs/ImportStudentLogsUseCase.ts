@@ -2,8 +2,9 @@ import { inject, injectable } from 'tsyringe';
 import fs from 'fs';
 import csvParse from 'csv-parse';
 
-import { IStudentLogsRepository } from '../../repositories/IStudentLogsRepository';
 import { IStudentsRepository } from '../../repositories/IStudentsRepository';
+import { IQueueProvider } from '../../../../infra/providers/IImportQueueProvider';
+import { IAddLogsToStudentsJob } from '../../jobs/IAddLogsToStudentsJob';
 
 interface IImportStudentLogs {
   name: string;
@@ -18,8 +19,8 @@ export class ImportStudentLogsUseCase {
   constructor(
     @inject('StudentsRepository')
     private stutendsRespository: IStudentsRepository,
-    @inject('StudentLogsRepository')
-    private studentLogsRepository: IStudentLogsRepository,
+    @inject('ImportStudentLogQueueProvider')
+    private importStudentLogQueue: IQueueProvider,
   ) {}
 
   private async loadStudents(
@@ -55,23 +56,24 @@ export class ImportStudentLogsUseCase {
 
   async run(file: Express.Multer.File): Promise<void> {
     const studentLogs = await this.loadStudents(file);
-    // await this.studentLogsRepository.createMany(studentLogs);
 
-    console.log(studentLogs);
+    const totalStudents = await this.stutendsRespository.countAll();
 
-    // Promise.all(
-    //   studentLogs.map(async studentLog => {
-    //     const { name, student_id_keep, ip, url, date } = studentLog;
-    //     return this.studentLogsRepository.create({
-    //       name,
-    //       student_id_keep,
-    //       ip,
-    //       url,
-    //       date,
-    //     });
-    //   }),
-    // );
+    const students = await this.stutendsRespository.findAll({
+      limit: totalStudents,
+    });
 
-    console.log('importação finalizada');
+    Promise.all(
+      students.map(student => {
+        const logs = studentLogs.filter(
+          log => log.student_id_keep === student.student_id_keep,
+        );
+
+        return this.importStudentLogQueue.addJob<IAddLogsToStudentsJob>({
+          student_id_keep: student.student_id_keep,
+          logs,
+        });
+      }),
+    );
   }
 }

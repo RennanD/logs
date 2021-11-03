@@ -17,4 +17,7 @@ container.registerSingleton<IStudentLogsRepository>(
   StudentLogsRepositoryMongoose,
 );
 
-container.registerSingleton<IQueueProvider>('QueueProvider', BullProvider);
+container.registerInstance<IQueueProvider>(
+  'ImportStudentLogQueueProvider',
+  new BullProvider('import-student-logs-queue'),
+);
