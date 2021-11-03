@@ -8,7 +8,7 @@ interface IStudentLogs {
   date: Date;
 }
 
-export interface IAddLogsToStudentsJob {
-  student_id_keep: string;
-  logs: IStudentLogs;
+export interface IAddLogsToQueueJob {
+  students: IStudentsSchema[];
+  logs: IStudentLogs[];
 }

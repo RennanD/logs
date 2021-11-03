@@ -6,6 +6,10 @@ import {
 import StudentLog, { IStudentLogSchema } from '../schemas/StudentLog';
 
 export class StudentLogsRepositoryMongoose implements IStudentLogsRepository {
+  async findById(id: string): Promise<IStudentLogSchema | null> {
+    return StudentLog.findById(id);
+  }
+
   async findAllByKeepId(
     keep_id: string,
     params?: IFindParams,
@@ -25,8 +29,12 @@ export class StudentLogsRepositoryMongoose implements IStudentLogsRepository {
     }).count();
   }
 
-  async create(createLogData: ICreateStudentLogDTO): Promise<void> {
-    await StudentLog.create(createLogData);
+  async create(
+    createLogData: ICreateStudentLogDTO,
+  ): Promise<IStudentLogSchema> {
+    const log = await StudentLog.create(createLogData);
+
+    return log;
   }
 
   async createMany(createManySLogsData: ICreateStudentLogDTO[]): Promise<void> {

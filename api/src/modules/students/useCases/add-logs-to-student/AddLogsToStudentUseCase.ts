@@ -17,22 +17,24 @@ export class AddLogsToStudentUseCase {
     const student = await this.studentRepository.findByKeepId(student_id_keep);
 
     if (student) {
-      await this.studentLogsRepository.createMany(logs);
+      const newLog = await this.studentLogsRepository.create(logs);
 
-      const totalLogs = await this.studentLogsRepository.countAll(
-        student_id_keep,
-      );
+      const verifyLog = await this.studentLogsRepository.findById(newLog._id);
 
-      const studentLogs = await this.studentLogsRepository.findAllByKeepId(
-        student_id_keep,
-        { limit: totalLogs },
-      );
+      // const studentLogs = await this.studentLogsRepository.findAllByKeepId(
+      //   student_id_keep,
+      //   { limit: totalLogs },
+      // );
 
-      const parsedLogs = studentLogs.map(log => log._id);
+      // const parsedLogs = studentLogs.map(log => log._id);
 
-      student.student_logs = parsedLogs;
+      if (verifyLog) {
+        student.student_logs = [...student.student_logs, verifyLog._id];
 
-      await this.studentRepository.save(student);
+        await this.studentRepository.save(student);
+
+        console.log(`Log Adicionados para "${student.student_id_keep}"`);
+      }
     }
   }
 }

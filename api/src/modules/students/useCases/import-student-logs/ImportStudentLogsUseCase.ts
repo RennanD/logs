@@ -19,8 +19,8 @@ export class ImportStudentLogsUseCase {
   constructor(
     @inject('StudentsRepository')
     private stutendsRespository: IStudentsRepository,
-    @inject('ImportStudentLogQueueProvider')
-    private importStudentLogQueue: IQueueProvider,
+    @inject('AddLogToQueueProvider')
+    private addLogToQueue: IQueueProvider,
   ) {}
 
   private async loadStudents(
@@ -44,6 +44,19 @@ export class ImportStudentLogsUseCase {
             url,
             date,
           });
+
+          await this.addLogToQueue.addJob<IAddLogsToStudentsJob>({
+            student_id_keep,
+            logs: {
+              name,
+              student_id_keep,
+              ip,
+              url,
+              date,
+            },
+          });
+
+          console.log(`Log adicionado na fila [${new Date().getTime()}]`);
         })
         .on('end', () => {
           resolve(studentLogs);
@@ -57,23 +70,51 @@ export class ImportStudentLogsUseCase {
   async run(file: Express.Multer.File): Promise<void> {
     const studentLogs = await this.loadStudents(file);
 
-    const totalStudents = await this.stutendsRespository.countAll();
+    console.log(studentLogs.length);
 
-    const students = await this.stutendsRespository.findAll({
-      limit: totalStudents,
-    });
+    // const totalStudents = await this.stutendsRespository.countAll();
 
-    Promise.all(
-      students.map(student => {
-        const logs = studentLogs.filter(
-          log => log.student_id_keep === student.student_id_keep,
-        );
+    // const students = await this.stutendsRespository.findAll({
+    //   limit: totalStudents,
+    // });
 
-        return this.importStudentLogQueue.addJob<IAddLogsToStudentsJob>({
-          student_id_keep: student.student_id_keep,
-          logs,
-        });
-      }),
-    );
+    // const parsedLogs = students.map(student => {
+    //   console.log(student.student_id_keep);
+
+    //   const logs = studentLogs.filter(
+    //     log => log.student_id_keep === student.student_id_keep,
+    //   );
+
+    //   return {
+    //     student,
+    //     logs,
+    //   };
+    // });
+
+    // console.log(parsedLogs);
+
+    // const packageJobs = [];
+    // const slice = 100;
+
+    // for (let count = 0; count < parsedLogs.length; count += slice) {
+    //   packageJobs.push(parsedLogs.slice(count, count + slice));
+    // }
+
+    // console.log(packageJobs);
+
+    // Promise.all(
+
+    // );
+
+    // console.log(`fila criada para o aluno "${student.student_id_keep}"`);
+
+    // const parsedLogs = studentLogs.filter(
+    //   log => log.student_id_keep === '4115',
+    // );
+
+    // await this.importStudentLogQueue.addJob<IAddLogsToStudentsJob>({
+    //   student_id_keep: '4115',
+    //   logs: parsedLogs,
+    // });
   }
 }

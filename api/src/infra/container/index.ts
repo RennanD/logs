@@ -4,7 +4,6 @@ import { StudentsRepositoryMongoose } from '../../modules/students/infra/mongoos
 import { IStudentLogsRepository } from '../../modules/students/repositories/IStudentLogsRepository';
 import { IStudentsRepository } from '../../modules/students/repositories/IStudentsRepository';
 import { IQueueProvider } from '../providers/IImportQueueProvider';
-// import { BullMQProvider } from '../providers/implementations/queue/BullMQProvider';
 import { BullProvider } from '../providers/implementations/queue/BullProvider';
 
 container.registerSingleton<IStudentsRepository>(
@@ -20,4 +19,9 @@ container.registerSingleton<IStudentLogsRepository>(
 container.registerInstance<IQueueProvider>(
   'ImportStudentLogQueueProvider',
   new BullProvider('import-student-logs-queue'),
+);
+
+container.registerInstance<IQueueProvider>(
+  'AddLogToQueueProvider',
+  new BullProvider('add-student-logs-queue'),
 );

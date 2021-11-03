@@ -1,16 +1,27 @@
 import { Request, Response } from 'express';
-import { container } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
+import { IQueueProvider } from '../../../../infra/providers/IImportQueueProvider';
+import { BullProvider } from '../../../../infra/providers/implementations/queue/BullProvider';
+import { IImportStudentLogs } from '../../jobs/IImportStudentLogs';
 
-import { ImportStudentLogsUseCase } from './ImportStudentLogsUseCase';
+// import { ImportStudentLogsUseCase } from './ImportStudentLogsUseCase';
 
+// @injectable()
 export class ImportStudentLogsController {
+  // constructor(
+  //   @inject('ImportStudentLogQueueProvider')
+  //   private importStudentLogQueue: IQueueProvider,
+  // ) {}
+
   async handle(request: Request, response: Response): Promise<Response> {
     const { file } = request;
 
-    const importStudentLogs = container.resolve(ImportStudentLogsUseCase);
+    const importStudentLogQueue = new BullProvider('import-student-logs-queue');
+
+    // const importStudentLogs = container.resolve(ImportStudentLogsUseCase);
 
     if (file) {
-      importStudentLogs.run(file);
+      importStudentLogQueue.addJob<IImportStudentLogs>({ file });
     }
 
     return response.json({

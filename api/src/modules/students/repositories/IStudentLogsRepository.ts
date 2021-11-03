@@ -13,8 +13,10 @@ export interface IStudentLogsRepository {
     params?: IFindParams,
   ): Promise<IStudentLogSchema[]>;
 
+  findById(id: string): Promise<IStudentLogSchema | null>;
+
   countAll(keep_id: string, url?: string): Promise<number>;
 
-  create(createLogData: ICreateStudentLogDTO): Promise<void>;
+  create(createLogData: ICreateStudentLogDTO): Promise<IStudentLogSchema>;
   createMany(createManySLogsData: ICreateStudentLogDTO[]): Promise<void>;
 }
