@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import { inject, injectable } from 'tsyringe';
+import { container, inject, injectable } from 'tsyringe';
 import { IQueueProvider } from '../../../../infra/providers/IImportQueueProvider';
 import { BullProvider } from '../../../../infra/providers/implementations/queue/BullProvider';
 import { IImportStudentLogs } from '../../jobs/IImportStudentLogs';
 
-// import { ImportStudentLogsUseCase } from './ImportStudentLogsUseCase';
+import { ImportStudentLogsUseCase } from './ImportStudentLogsUseCase';
 
 // @injectable()
 export class ImportStudentLogsController {
@@ -18,10 +18,11 @@ export class ImportStudentLogsController {
 
     const importStudentLogQueue = new BullProvider('import-student-logs-queue');
 
-    // const importStudentLogs = container.resolve(ImportStudentLogsUseCase);
+    const importStudentLogs = container.resolve(ImportStudentLogsUseCase);
 
     if (file) {
-      importStudentLogQueue.addJob<IImportStudentLogs>({ file });
+      // importStudentLogQueue.addJob<IImportStudentLogs>({ file });
+      await importStudentLogs.run(file);
     }
 
     return response.json({

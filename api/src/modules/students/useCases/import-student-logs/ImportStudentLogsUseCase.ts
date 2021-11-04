@@ -7,11 +7,14 @@ import { IQueueProvider } from '../../../../infra/providers/IImportQueueProvider
 import { IAddLogsToStudentsJob } from '../../jobs/IAddLogsToStudentsJob';
 
 interface IImportStudentLogs {
-  name: string;
   student_id_keep: string;
-  url: string;
-  ip: string;
-  date: Date;
+  logs: {
+    name: string;
+    student_id_keep: string;
+    url: string;
+    ip: string;
+    date: Date;
+  }[];
 }
 
 @injectable()
@@ -36,27 +39,39 @@ export class ImportStudentLogsUseCase {
 
       parseFile
         .on('data', async line => {
-          const [, name, student_id_keep, ip, url, date] = line;
-          studentLogs.push({
-            name,
-            student_id_keep,
-            ip,
-            url,
-            date,
-          });
+          const [name, student_id_keep, ip, url, date] = line;
 
-          await this.addLogToQueue.addJob<IAddLogsToStudentsJob>({
-            student_id_keep,
-            logs: {
+          const findStudentIndex = studentLogs.findIndex(
+            studentLog => studentLog.student_id_keep === student_id_keep,
+          );
+
+          if (findStudentIndex >= 0) {
+            studentLogs[findStudentIndex].logs.push({
               name,
               student_id_keep,
               ip,
               url,
               date,
-            },
-          });
+            });
+          } else {
+            studentLogs.push({
+              student_id_keep,
+              logs: [{ name, student_id_keep, ip, url, date }],
+            });
+          }
 
-          console.log(`Log adicionado na fila [${new Date().getTime()}]`);
+          // await this.addLogToQueue.addJob<IAddLogsToStudentsJob>({
+          //   student_id_keep,
+          //   log: {
+          //     name,
+          //     date,
+          //     ip,
+          //     student_id_keep,
+          //     url,
+          //   },
+          // });
+
+          // console.log(`Log adicionado na fila [${new Date().getTime()}]`);
         })
         .on('end', () => {
           resolve(studentLogs);
@@ -68,9 +83,21 @@ export class ImportStudentLogsUseCase {
   }
 
   async run(file: Express.Multer.File): Promise<void> {
+    console.log('começou', new Date());
+
     const studentLogs = await this.loadStudents(file);
 
+    studentLogs.forEach(async (studentLog, index) => {
+      console.log(`adicionado para ${index + 1}`);
+      await this.addLogToQueue.addJob<IAddLogsToStudentsJob>({
+        student_id_keep: studentLog.student_id_keep,
+        logs: studentLog.logs,
+      });
+    });
+
     console.log(studentLogs.length);
+
+    // // console.log({ studentLogs });
 
     // const totalStudents = await this.stutendsRespository.countAll();
 
@@ -79,8 +106,6 @@ export class ImportStudentLogsUseCase {
     // });
 
     // const parsedLogs = students.map(student => {
-    //   console.log(student.student_id_keep);
-
     //   const logs = studentLogs.filter(
     //     log => log.student_id_keep === student.student_id_keep,
     //   );
@@ -89,6 +114,19 @@ export class ImportStudentLogsUseCase {
     //     student,
     //     logs,
     //   };
+    // });
+
+    // // console.log(parsedLogs);
+
+    // console.log('terminou', new Date());
+
+    // parsedLogs.forEach(async jobData => {
+    //   console.log(`${jobData.student.student_id_keep}, na fila`);
+
+    //   await this.addLogToQueue.addJob<IAddLogsToStudentsJob>({
+    //     student: jobData.student,
+    //     logs: jobData.logs,
+    //   });
     // });
 
     // console.log(parsedLogs);
