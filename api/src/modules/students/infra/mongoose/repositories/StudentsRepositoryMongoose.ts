@@ -32,11 +32,12 @@ export class StudentsRepositoryMongoose implements IStudentsRepository {
   }
 
   async create(createStudentData: ICreateStudentDTO): Promise<void> {
-    const { name, student_id_keep } = createStudentData;
+    const { name, student_id_keep, logs } = createStudentData;
 
     await Student.create({
       name,
       student_id_keep,
+      student_logs: logs,
     });
   }
 

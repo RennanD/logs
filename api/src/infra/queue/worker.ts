@@ -9,9 +9,10 @@ import { IAddLogsToStudentsJob } from '../../modules/students/jobs/IAddLogsToStu
 import { AddLogsToStudentUseCase } from '../../modules/students/useCases/add-logs-to-student/AddLogsToStudentUseCase';
 import { IImportStudentLogs } from '../../modules/students/jobs/IImportStudentLogs';
 import { ImportStudentLogsUseCase } from '../../modules/students/useCases/import-student-logs/ImportStudentLogsUseCase';
+import { BullMQProvider } from '../providers/implementations/queue/BullMQProvider';
 
 const importQueueProvider = new BullProvider('import-student-logs-queue');
-const addLogToQueueProvider = new BullProvider('add-student-logs-queue');
+const addLogToQueueProvider = new BullMQProvider('add-student-logs-queue');
 
 importQueueProvider.process<IImportStudentLogs>(async job => {
   const { file } = job;
@@ -27,4 +28,4 @@ addLogToQueueProvider.process<IAddLogsToStudentsJob>(async job => {
   const addLogsToStudent = container.resolve(AddLogsToStudentUseCase);
 
   await addLogsToStudent.run({ student_id_keep, logs });
-});
+}, 10);

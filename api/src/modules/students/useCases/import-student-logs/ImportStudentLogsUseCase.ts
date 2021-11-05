@@ -2,6 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import fs from 'fs';
 import csvParse from 'csv-parse';
 
+import { Types } from 'mongoose';
 import { IStudentsRepository } from '../../repositories/IStudentsRepository';
 import { IQueueProvider } from '../../../../infra/providers/IImportQueueProvider';
 import { IAddLogsToStudentsJob } from '../../jobs/IAddLogsToStudentsJob';
@@ -9,6 +10,7 @@ import { IAddLogsToStudentsJob } from '../../jobs/IAddLogsToStudentsJob';
 interface IImportStudentLogs {
   student_id_keep: string;
   logs: {
+    _id?: Types.ObjectId;
     name: string;
     student_id_keep: string;
     url: string;
@@ -41,12 +43,15 @@ export class ImportStudentLogsUseCase {
         .on('data', async line => {
           const [name, student_id_keep, ip, url, date] = line;
 
+          const _id = new Types.ObjectId();
+
           const findStudentIndex = studentLogs.findIndex(
             studentLog => studentLog.student_id_keep === student_id_keep,
           );
 
           if (findStudentIndex >= 0) {
             studentLogs[findStudentIndex].logs.push({
+              _id,
               name,
               student_id_keep,
               ip,
@@ -56,20 +61,9 @@ export class ImportStudentLogsUseCase {
           } else {
             studentLogs.push({
               student_id_keep,
-              logs: [{ name, student_id_keep, ip, url, date }],
+              logs: [{ _id, name, student_id_keep, ip, url, date }],
             });
           }
-
-          // await this.addLogToQueue.addJob<IAddLogsToStudentsJob>({
-          //   student_id_keep,
-          //   log: {
-          //     name,
-          //     date,
-          //     ip,
-          //     student_id_keep,
-          //     url,
-          //   },
-          // });
 
           // console.log(`Log adicionado na fila [${new Date().getTime()}]`);
         })
@@ -85,17 +79,12 @@ export class ImportStudentLogsUseCase {
   async run(file: Express.Multer.File): Promise<void> {
     console.log('começou', new Date());
 
-    const studentLogs = await this.loadStudents(file);
+    const logs = await this.loadStudents(file);
 
-    studentLogs.forEach(async (studentLog, index) => {
-      console.log(`adicionado para ${index + 1}`);
-      await this.addLogToQueue.addJob<IAddLogsToStudentsJob>({
-        student_id_keep: studentLog.student_id_keep,
-        logs: studentLog.logs,
-      });
-    });
-
-    console.log(studentLogs.length);
+    await this.addLogToQueue.addManyJobs<IAddLogsToStudentsJob>(
+      'add-logs',
+      logs,
+    );
 
     // // console.log({ studentLogs });
 

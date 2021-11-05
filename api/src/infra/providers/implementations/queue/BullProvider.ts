@@ -22,8 +22,11 @@ export class BullProvider implements IQueueProvider {
     await this.queue.addBulk(parsedJobs);
   }
 
-  process<T>(processFunction: (job: T) => Promise<void>): void {
-    this.queue.process(job => {
+  process<T>(
+    processFunction: (job: T) => Promise<void>,
+    concurrency = 1,
+  ): void {
+    this.queue.process(concurrency, job => {
       processFunction(job.data);
     });
   }

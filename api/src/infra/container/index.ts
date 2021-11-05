@@ -5,6 +5,7 @@ import { IStudentLogsRepository } from '../../modules/students/repositories/IStu
 import { IStudentsRepository } from '../../modules/students/repositories/IStudentsRepository';
 import { IQueueProvider } from '../providers/IImportQueueProvider';
 import { BullProvider } from '../providers/implementations/queue/BullProvider';
+import { BullMQProvider } from '../providers/implementations/queue/BullMQProvider';
 
 container.registerSingleton<IStudentsRepository>(
   'StudentsRepository',
@@ -23,5 +24,5 @@ container.registerInstance<IQueueProvider>(
 
 container.registerInstance<IQueueProvider>(
   'AddLogToQueueProvider',
-  new BullProvider('add-student-logs-queue'),
+  new BullMQProvider('add-student-logs-queue'),
 );
