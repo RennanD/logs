@@ -1,11 +1,14 @@
 import { inject, injectable } from 'tsyringe';
+
 import fs from 'fs';
+import { pipeline, Readable, Writable } from 'stream';
+import { promisify } from 'util';
+
 import csvParse from 'csv-parse';
 
-import { Types } from 'mongoose';
+import { Schema, Types } from 'mongoose';
 import { IStudentsRepository } from '../../repositories/IStudentsRepository';
-import { IQueueProvider } from '../../../../infra/providers/IImportQueueProvider';
-import { IAddLogsToStudentsJob } from '../../jobs/IAddLogsToStudentsJob';
+import { IStudentLogsRepository } from '../../repositories/IStudentLogsRepository';
 
 interface IImportStudentLogs {
   student_id_keep: string;
@@ -23,125 +26,100 @@ interface IImportStudentLogs {
 export class ImportStudentLogsUseCase {
   constructor(
     @inject('StudentsRepository')
-    private stutendsRespository: IStudentsRepository,
-    @inject('AddLogToQueueProvider')
-    private addLogToQueue: IQueueProvider,
+    private studentsRepository: IStudentsRepository,
+    @inject('StudentLogsRepository')
+    private studentLogsRepository: IStudentLogsRepository,
   ) {}
 
-  private async loadStudents(
-    file: Express.Multer.File,
-  ): Promise<IImportStudentLogs[]> {
-    return new Promise((resolve, reject) => {
-      const stream = fs.createReadStream(file.path);
-      const studentLogs: IImportStudentLogs[] = [];
-
-      const parseFile = csvParse();
-
-      stream.pipe(parseFile);
-
-      parseFile
-        .on('data', async line => {
-          const [name, student_id_keep, ip, url, date] = line;
-
-          const _id = new Types.ObjectId();
-
-          const findStudentIndex = studentLogs.findIndex(
-            studentLog => studentLog.student_id_keep === student_id_keep,
-          );
-
-          if (findStudentIndex >= 0) {
-            studentLogs[findStudentIndex].logs.push({
-              _id,
-              name,
-              student_id_keep,
-              ip,
-              url,
-              date,
-            });
-          } else {
-            studentLogs.push({
-              student_id_keep,
-              logs: [{ _id, name, student_id_keep, ip, url, date }],
-            });
-          }
-
-          // console.log(`Log adicionado na fila [${new Date().getTime()}]`);
-        })
-        .on('end', () => {
-          resolve(studentLogs);
-        })
-        .on('error', err => {
-          reject(err);
-        });
-    });
-  }
-
   async run(file: Express.Multer.File): Promise<void> {
+    const pipelineAsync = promisify(pipeline);
+    const { studentsRepository, studentLogsRepository } = this;
+
     console.log('começou', new Date());
 
-    const logs = await this.loadStudents(file);
+    const readableStream = new Readable({
+      async read() {
+        const stream = fs.createReadStream(file.path);
+        const studentLogs: IImportStudentLogs[] = [];
 
-    await this.addLogToQueue.addManyJobs<IAddLogsToStudentsJob>(
-      'add-logs',
-      logs,
-    );
+        const parseFile = csvParse();
 
-    // // console.log({ studentLogs });
+        stream.pipe(parseFile);
 
-    // const totalStudents = await this.stutendsRespository.countAll();
+        parseFile
+          .on('data', async line => {
+            const [name, student_id_keep, ip, url, date] = line;
 
-    // const students = await this.stutendsRespository.findAll({
-    //   limit: totalStudents,
-    // });
+            const _id = new Types.ObjectId();
 
-    // const parsedLogs = students.map(student => {
-    //   const logs = studentLogs.filter(
-    //     log => log.student_id_keep === student.student_id_keep,
-    //   );
+            const findStudentIndex = studentLogs.findIndex(
+              studentLog => studentLog.student_id_keep === student_id_keep,
+            );
 
-    //   return {
-    //     student,
-    //     logs,
-    //   };
-    // });
+            if (findStudentIndex >= 0) {
+              studentLogs[findStudentIndex].logs.push({
+                _id,
+                name,
+                student_id_keep,
+                ip,
+                url,
+                date,
+              });
+            } else {
+              studentLogs.push({
+                student_id_keep,
+                logs: [{ _id, name, student_id_keep, ip, url, date }],
+              });
+            }
 
-    // // console.log(parsedLogs);
+            // console.log(`Log adicionado na fila [${new Date().getTime()}]`);
+          })
+          .on('end', () => {
+            studentLogs.forEach(log => {
+              this.push(JSON.stringify(log));
+            });
+            this.push(null);
+            console.log('leu tudo');
+          });
+      },
+    });
 
-    // console.log('terminou', new Date());
+    const writableStream = new Writable({
+      async write(chunk, encoding, cb) {
+        const data: IImportStudentLogs = JSON.parse(chunk);
 
-    // parsedLogs.forEach(async jobData => {
-    //   console.log(`${jobData.student.student_id_keep}, na fila`);
+        const { student_id_keep, logs } = data;
 
-    //   await this.addLogToQueue.addJob<IAddLogsToStudentsJob>({
-    //     student: jobData.student,
-    //     logs: jobData.logs,
-    //   });
-    // });
+        await studentLogsRepository.createMany(logs);
 
-    // console.log(parsedLogs);
+        const student = await studentsRepository.findByKeepId(student_id_keep);
 
-    // const packageJobs = [];
-    // const slice = 100;
+        if (student) {
+          const logsIds = logs.map(
+            log => log._id! as unknown as Schema.Types.ObjectId,
+          );
+          student.student_logs = [...student.student_logs, ...logsIds];
+          studentsRepository.save(student);
 
-    // for (let count = 0; count < parsedLogs.length; count += slice) {
-    //   packageJobs.push(parsedLogs.slice(count, count + slice));
-    // }
+          console.log(`logs adicionados para ${student_id_keep}`);
 
-    // console.log(packageJobs);
+          return;
+        }
 
-    // Promise.all(
+        const logsIds = logs.map(log => log._id!);
 
-    // );
+        await studentsRepository.create({
+          student_id_keep,
+          name: logs[0].name,
+          logs: logsIds,
+        });
 
-    // console.log(`fila criada para o aluno "${student.student_id_keep}"`);
+        console.log(`aluno ${student_id_keep} criado`);
 
-    // const parsedLogs = studentLogs.filter(
-    //   log => log.student_id_keep === '4115',
-    // );
+        cb();
+      },
+    });
 
-    // await this.importStudentLogQueue.addJob<IAddLogsToStudentsJob>({
-    //   student_id_keep: '4115',
-    //   logs: parsedLogs,
-    // });
+    await pipelineAsync(readableStream, writableStream);
   }
 }
