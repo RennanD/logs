@@ -8,7 +8,6 @@
     "dev:queue": "tsnd -r tsconfig-paths/register --inspect --ignore-watch node_modules --transpile-only --respawn src/infra/queue/worker.ts"
   },
   "dependencies": {
-    "bull": "^4.0.0",
     "bullmq": "^1.51.3",
     "csv-parse": "^4.16.3",
     "express": "^4.17.1",
