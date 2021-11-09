@@ -3,8 +3,7 @@ import { IStudentsSchema } from '../../infra/mongoose/schemas/Student';
 import { IStudentsRepository } from '../../repositories/IStudentsRepository';
 
 interface IRequest {
-  student_id_keep?: string;
-  name?: string;
+  search?: string;
   limit?: number;
   offset?: number;
 }
@@ -21,22 +20,15 @@ export class ListStudentsUseCase {
     private studentsRepository: IStudentsRepository,
   ) {}
 
-  async run({
-    student_id_keep,
-    name,
-    limit,
-    offset,
-  }: IRequest): Promise<IResposne> {
+  async run({ search, limit, offset }: IRequest): Promise<IResposne> {
     const students = await this.studentsRepository.findAll({
-      name,
-      student_id_keep,
+      search,
       limit,
       offset,
     });
 
     const totalStudents = await this.studentsRepository.countAll({
-      name,
-      student_id_keep,
+      search,
     });
 
     return {

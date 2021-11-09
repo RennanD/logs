@@ -9,8 +9,15 @@ import Student, { IStudentsSchema } from '../schemas/Student';
 export class StudentsRepositoryMongoose implements IStudentsRepository {
   async findAll(params?: IFindStudentParams): Promise<IStudentsSchema[]> {
     return Student.find({
-      name: { $regex: params?.name || '', $options: 'i' },
-      student_id_keep: { $regex: params?.student_id_keep || '', $options: 'i' },
+      $or: [
+        { name: { $regex: params?.search || '', $options: 'i' } },
+        {
+          student_id_keep: {
+            $regex: params?.search || '',
+            $options: 'i',
+          },
+        },
+      ],
     })
       .skip(Number(params?.offset) || 0)
       .limit(Number(params?.limit) || 10);
@@ -18,8 +25,15 @@ export class StudentsRepositoryMongoose implements IStudentsRepository {
 
   async countAll(params?: IFindStudentParams): Promise<number> {
     return Student.find({
-      name: { $regex: params?.name || '', $options: 'i' },
-      student_id_keep: { $regex: params?.student_id_keep || '', $options: 'i' },
+      $or: [
+        { name: { $regex: params?.search || '', $options: 'i' } },
+        {
+          student_id_keep: {
+            $regex: params?.search || '',
+            $options: 'i',
+          },
+        },
+      ],
     }).count();
   }
 

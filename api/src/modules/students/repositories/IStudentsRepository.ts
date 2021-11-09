@@ -2,8 +2,9 @@ import { ICreateStudentDTO } from '../dtos/ICreateStudentDTO';
 import { IStudentsSchema } from '../infra/mongoose/schemas/Student';
 
 export interface IFindStudentParams {
-  student_id_keep?: string;
-  name?: string;
+  // student_id_keep?: string;
+  // name?: string;
+  search?: string;
   limit?: number;
   offset?: number;
 }
