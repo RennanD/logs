@@ -24,7 +24,7 @@ export class StudentsRepositoryMongoose implements IStudentsRepository {
   }
 
   async findById(id: string): Promise<IStudentsSchema | null> {
-    return Student.findById(id);
+    return Student.findById(id).populate('student_logs');
   }
 
   async findByKeepId(keep_id: string): Promise<IStudentsSchema | null> {

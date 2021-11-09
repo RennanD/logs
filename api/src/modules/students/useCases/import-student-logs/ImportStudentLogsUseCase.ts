@@ -7,6 +7,7 @@ import { promisify } from 'util';
 import csvParse from 'csv-parse';
 
 import { Schema, Types } from 'mongoose';
+
 import { IStudentsRepository } from '../../repositories/IStudentsRepository';
 import { IStudentLogsRepository } from '../../repositories/IStudentLogsRepository';
 
@@ -33,6 +34,7 @@ export class ImportStudentLogsUseCase {
 
   async run(file: Express.Multer.File): Promise<void> {
     const pipelineAsync = promisify(pipeline);
+
     const { studentsRepository, studentLogsRepository } = this;
 
     console.log('começou', new Date());

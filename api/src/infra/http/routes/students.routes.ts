@@ -24,7 +24,7 @@ const importStudentsController = new ImportStudentsController();
 const importStudentLogsController = new ImportStudentLogsController();
 
 studentsRouter.get('/', listStudentsController.handle);
-studentsRouter.get('/:student_id_keep/logs', listStudentLogsController.handle);
+studentsRouter.get('/:student_id/logs', listStudentLogsController.handle);
 
 studentsRouter.post('/logs', createStudentLogsController.handle);
 studentsRouter.post('/add-logs', addLogsToStudentController.handle);
