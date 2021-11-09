@@ -1,4 +1,5 @@
 export default {
-  host: 'localhost',
-  port: 6379,
+  host: String(process.env.REDIS_HOST),
+  port: Number(process.env.REDIS_PORT),
+  database: Number(process.env.REDIS_DATABASE),
 };

@@ -2,11 +2,7 @@ import { Queue, Worker, Processor, QueueScheduler } from 'bullmq';
 
 import { IQueueProvider } from '../../IImportQueueProvider';
 
-const REDIS_CONFIG = {
-  host: '127.0.0.1',
-  port: 6379,
-  db: 0,
-};
+import redisConfig from '../../../../configs/redis';
 
 export class BullMQProvider implements IQueueProvider {
   private queue: Queue;
@@ -16,7 +12,7 @@ export class BullMQProvider implements IQueueProvider {
   constructor(queue_name: string) {
     this.queueName = queue_name;
     this.queue = new Queue(queue_name, {
-      connection: REDIS_CONFIG,
+      connection: redisConfig,
       defaultJobOptions: {
         removeOnComplete: true,
         attempts: 5,
@@ -52,7 +48,7 @@ export class BullMQProvider implements IQueueProvider {
     };
 
     new Worker(this.queueName, processor, {
-      connection: REDIS_CONFIG,
+      connection: redisConfig,
       concurrency,
       limiter: {
         max: 400,
@@ -61,7 +57,7 @@ export class BullMQProvider implements IQueueProvider {
     });
 
     new QueueScheduler(this.queueName, {
-      connection: REDIS_CONFIG,
+      connection: redisConfig,
     });
   }
 }
