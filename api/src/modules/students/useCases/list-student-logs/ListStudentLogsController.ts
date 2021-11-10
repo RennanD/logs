@@ -8,15 +8,25 @@ import { ListStudentLogsUseCase } from './ListStudentLogsUseCase';
 //   offset?: number;
 // }
 
+interface IQueryParams {
+  page?: string;
+  limit?: string;
+  url?: string;
+}
+
 export class ListStudentLogsController {
   async handle(request: Request, response: Response): Promise<Response> {
-    // const { url, limit, offset } = request.query as IQueryParams;
+    const { limit, page, url } = request.query as IQueryParams;
     const { student_id } = request.params;
 
     const listStudentLogs = container.resolve(ListStudentLogsUseCase);
 
     try {
-      const result = await listStudentLogs.run(student_id);
+      const result = await listStudentLogs.run(student_id, {
+        limit,
+        page,
+        url,
+      });
 
       return response.json(result);
     } catch (error) {
