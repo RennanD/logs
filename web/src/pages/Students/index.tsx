@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import { FiArrowLeft, FiEye, FiSearch } from 'react-icons/fi';
 
-import { Link } from 'react-router-dom';
 import styles from './styles.module.scss';
-import { api } from '../../services/api';
+
 import { LoadingTable } from '../../components/LoadingTable';
-// import { Pagination } from '../../components/Pagination';
+import { Pagination } from '../../components/Pagination';
+
+import { api } from '../../services/api';
 
 type Student = {
   _id: string;
@@ -17,32 +19,24 @@ type Student = {
 type AxiosResponse = {
   result: Student[];
   total_students: number;
-  // last_page: number;
 };
 
 export function Students(): JSX.Element {
   const [students, setStudents] = useState<Student[]>([]);
-  // const [currentPage, setCurrentPage] = useState(1);
+  const [totalStundents, setTotalStudents] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // const pages = useMemo(() => {
-  //   const arrayPages = [];
-  //   for (let count = currentPage; count >= lastPage; count + 1) {
-  //     if (arrayPages.length < 10) {
-  //       arrayPages.push(count);
-  //     }
-  //   }
-
-  //   return
-  // }, [currentPage, lastPage]);
-
-  // const pages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const limit = 10;
 
-  // function handleChangePage(page: number) {
-  //   setCurrentPage(page);
-  // }
+  function handleChangePage(page: number) {
+    setCurrentPage(page);
+  }
+  function handleSearch(search_text: string) {
+    setCurrentPage(1);
+    setSearch(search_text);
+  }
 
   useEffect(() => {
     api
@@ -50,13 +44,15 @@ export function Students(): JSX.Element {
         params: {
           search,
           limit,
+          page: currentPage,
         },
       })
       .then(response => {
         setStudents(response.data.result);
+        setTotalStudents(response.data.total_students);
         setLoading(false);
       });
-  }, [search, limit]);
+  }, [search, limit, currentPage]);
 
   return (
     <div className={styles.container}>
@@ -74,7 +70,7 @@ export function Students(): JSX.Element {
               value={search}
               type="text"
               placeholder="Pesquisar..."
-              onChange={event => setSearch(event.target.value)}
+              onChange={event => handleSearch(event.target.value)}
             />
 
             <FiSearch size={20} />
@@ -110,11 +106,12 @@ export function Students(): JSX.Element {
                 ))}
               </tbody>
             </table>
-            {/* <Pagination
-              pages={pages}
-              activePage={currentPage}
-              onClick={handleChangePage}
-            /> */}
+            <Pagination
+              totalRegister={totalStundents}
+              currentPage={currentPage}
+              limit={limit}
+              onPageChange={handleChangePage}
+            />
           </>
         )}
       </main>

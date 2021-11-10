@@ -4,20 +4,20 @@ import { ListStudentsUseCase } from './ListStudentsUseCase';
 
 interface IQueryParmas {
   search?: string;
-  limit?: number;
-  offset?: number;
+  limit?: string;
+  page?: string;
 }
 
 export class ListStudentsController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const { search, limit, offset } = request.query as IQueryParmas;
+    const { search, limit, page } = request.query as IQueryParmas;
 
     const listStudents = container.resolve(ListStudentsUseCase);
 
     const result = await listStudents.run({
       search,
       limit,
-      offset,
+      page,
     });
 
     return response.json(result);

@@ -31,6 +31,7 @@ type AxiosResponse = {
 
 export function StudentsLogs(): JSX.Element {
   const [logs, setLogs] = useState<Log[]>([]);
+  const [totalLogs, setTotalLogs] = useState(0);
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -42,11 +43,15 @@ export function StudentsLogs(): JSX.Element {
 
   const { params } = useRouteMatch<RouteParams>();
 
-  const pages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const limit = 10;
 
   function handleChangePage(page: number) {
     setCurrentPage(page);
+  }
+
+  function handleSearchUrl(url_text: string) {
+    setCurrentPage(1);
+    setUrl(url_text);
   }
 
   useEffect(() => {
@@ -61,6 +66,7 @@ export function StudentsLogs(): JSX.Element {
       .then(response => {
         setLogs(response.data.result);
         setStudentName(response.data.student_name);
+        setTotalLogs(response.data.total_logs);
         setLoading(false);
       });
   }, [limit, currentPage, params, url]);
@@ -81,7 +87,7 @@ export function StudentsLogs(): JSX.Element {
               value={url}
               type="text"
               placeholder="Pesquisar..."
-              onChange={event => setUrl(event.target.value)}
+              onChange={event => handleSearchUrl(event.target.value)}
             />
 
             <FiSearch size={20} />
@@ -118,9 +124,10 @@ export function StudentsLogs(): JSX.Element {
             </table>
 
             <Pagination
-              pages={pages}
-              activePage={currentPage}
-              onClick={handleChangePage}
+              limit={limit}
+              totalRegister={totalLogs}
+              currentPage={currentPage}
+              onPageChange={handleChangePage}
             />
           </>
         )}

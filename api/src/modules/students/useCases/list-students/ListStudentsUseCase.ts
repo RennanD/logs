@@ -4,8 +4,8 @@ import { IStudentsRepository } from '../../repositories/IStudentsRepository';
 
 interface IRequest {
   search?: string;
-  limit?: number;
-  offset?: number;
+  limit?: string;
+  page?: string;
 }
 
 interface IResposne {
@@ -20,10 +20,16 @@ export class ListStudentsUseCase {
     private studentsRepository: IStudentsRepository,
   ) {}
 
-  async run({ search, limit, offset }: IRequest): Promise<IResposne> {
+  async run({
+    search,
+    limit = '10',
+    page = '1',
+  }: IRequest): Promise<IResposne> {
+    const offset = (Number(page) - 1) * Number(limit);
+
     const students = await this.studentsRepository.findAll({
       search,
-      limit,
+      limit: Number(limit),
       offset,
     });
 

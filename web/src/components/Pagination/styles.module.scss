@@ -32,6 +32,14 @@
       }
     }
 
+    div {
+      height: 30px;
+      width: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     & + li {
       margin-left: 4px;
     }
