@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 
-import { FiSearch, FiX } from 'react-icons/fi';
+import { FiArrowLeft, FiSearch } from 'react-icons/fi';
 
 import { Link, useRouteMatch } from 'react-router-dom';
 import styles from './styles.module.scss';
@@ -15,117 +15,76 @@ type RouteParams = {
 };
 
 type Log = {
-  id: number;
-  aluno_id: string;
-  nome: string;
+  _id: string;
+  student_id_keep: string;
+  name: string;
   ip: string;
   url: string;
-  data: Date;
+  date: string;
 };
 
 type AxiosResponse = {
+  student_name: string;
   result: Log[];
-  current_page: number;
-  last_page: number;
+  total_logs: number;
 };
 
 export function StudentsLogs(): JSX.Element {
   const [logs, setLogs] = useState<Log[]>([]);
-  const [searchedLogs, setSearchedLogs] = useState<Log[]>([]);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [lastPage, setLastPage] = useState(0);
-  const [limit, setLimit] = useState(30);
 
   const [loading, setLoading] = useState(true);
 
   const [studentName, setStudentName] = useState('');
 
-  const [hasSearch, setHasSearch] = useState(false);
-  const [lastSearch, setLastSearch] = useState('');
   const [url, setUrl] = useState('');
 
   const { params } = useRouteMatch<RouteParams>();
 
-  const pages = useMemo(() => {
-    console.log(lastPage);
-    return Array.from({ length: lastPage }, (_, i) => i + 1);
-  }, [lastPage]);
-
-  async function handleSearch() {
-    setLoading(true);
-    const response = await api.get<AxiosResponse>(`/students/${params.id}`, {
-      params: {
-        url,
-        limit,
-        page: currentPage,
-      },
-    });
-
-    setSearchedLogs(response.data.result);
-    setLastPage(response.data.last_page);
-    setHasSearch(!!url);
-    setUrl('');
-    setLastSearch(url);
-    setLoading(false);
-  }
-
-  function handleCleanSearch() {
-    setUrl('');
-    setHasSearch(false);
-    setSearchedLogs(logs);
-  }
+  const pages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const limit = 10;
 
   function handleChangePage(page: number) {
     setCurrentPage(page);
   }
 
   useEffect(() => {
-    setLoading(true);
     api
-      .get<AxiosResponse>(`/students/${params.id}`, {
+      .get<AxiosResponse>(`/students/${params.id}/logs`, {
         params: {
           limit,
           page: currentPage,
+          url,
         },
       })
       .then(response => {
         setLogs(response.data.result);
-        setSearchedLogs(response.data.result);
-        setStudentName(response.data.result[0].nome);
-        setCurrentPage(response.data.current_page);
-        setLastPage(response.data.last_page);
+        setStudentName(response.data.student_name);
         setLoading(false);
       });
-  }, [limit, currentPage, params]);
+  }, [limit, currentPage, params, url]);
 
   return (
     <div className={styles.container}>
       <main className={styles.mainContent}>
         <header>
           <article>
-            {studentName && <h2>Logs para {`"${studentName}"`}</h2>}
-            {hasSearch && (
-              <div className={styles.searchLabel}>
-                <span>Você pesquisou por: {`"${lastSearch}"`}</span>
-                <button onClick={handleCleanSearch} type="button">
-                  <FiX size={14} />
-                </button>
-              </div>
-            )}
+            <Link to="/students">
+              <FiArrowLeft size={30} />
+            </Link>
+            <h3>Logs para {`"${studentName}"`}</h3>
           </article>
 
           <div>
             <input
               value={url}
               type="text"
-              placeholder="Buscar URL..."
+              placeholder="Pesquisar..."
               onChange={event => setUrl(event.target.value)}
             />
 
-            <button type="button" onClick={handleSearch}>
-              Buscar <FiSearch size={16} />
-            </button>
+            <FiSearch size={20} />
           </div>
         </header>
 
@@ -142,28 +101,27 @@ export function StudentsLogs(): JSX.Element {
                 </tr>
               </thead>
               <tbody>
-                {searchedLogs.map(log => (
-                  <tr key={String(log.id)}>
+                {logs.map(log => (
+                  <tr key={String(log._id)}>
                     <td>
                       <Link to="/">{log.ip}</Link>
                     </td>
                     <td>{log.url}</td>
                     <td>
                       <div>
-                        <p>{log.data}</p>
+                        <p>{log.date}</p>
                       </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            {lastPage && (
-              <Pagination
-                pages={pages}
-                activePage={currentPage}
-                onClick={handleChangePage}
-              />
-            )}
+
+            <Pagination
+              pages={pages}
+              activePage={currentPage}
+              onClick={handleChangePage}
+            />
           </>
         )}
       </main>

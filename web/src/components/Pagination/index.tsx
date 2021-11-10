@@ -2,25 +2,25 @@ import { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 
 type PaginationProps = {
-  totalPages: number;
+  pages: number[];
   activePage: number;
   onClick: (page: number) => void;
 };
 
 export function Pagination({
-  totalPages,
+  pages,
   activePage,
   onClick,
 }: PaginationProps): JSX.Element {
-  const [pages, setPages] = useState({
-    first: '1',
-    second: '2',
-    third: '3',
-    fourth: '4',
-    fifth: '5',
-    sixth: '...',
-    seventh: '338',
-  });
+  // const [pages, setPages] = useState({
+  //   first: '1',
+  //   second: '2',
+  //   third: '3',
+  //   fourth: '4',
+  //   fifth: '5',
+  //   sixth: '...',
+  //   seventh: '338',
+  // });
 
   // useEffect(() => {
   //   const beforPages = activePage - 1;
@@ -78,7 +78,7 @@ export function Pagination({
       </aside>
       <aside>
         <ul className={styles.pagination}>
-          {/* {pages.map(page => (
+          {pages.map(page => (
             <li key={String(page)}>
               <button
                 onClick={() => onClick(page)}
@@ -88,8 +88,8 @@ export function Pagination({
                 {page}
               </button>
             </li>
-          ))} */}
-          <li>
+          ))}
+          {/* <li>
             <button
               className={
                 String(activePage) === pages.first ? styles.activePage : ''
@@ -158,7 +158,7 @@ export function Pagination({
             >
               {pages.seventh}
             </button>
-          </li>
+          </li> */}
         </ul>
       </aside>
     </footer>

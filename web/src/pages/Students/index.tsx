@@ -1,29 +1,29 @@
 import { useState, useEffect } from 'react';
 
-import { FiArrowLeft, FiArrowUpLeft, FiEye, FiSearch } from 'react-icons/fi';
+import { FiArrowLeft, FiEye, FiSearch } from 'react-icons/fi';
 
 import { Link } from 'react-router-dom';
 import styles from './styles.module.scss';
 import { api } from '../../services/api';
 import { LoadingTable } from '../../components/LoadingTable';
-import { Pagination } from '../../components/Pagination';
+// import { Pagination } from '../../components/Pagination';
 
 type Student = {
-  aluno_id: string;
-  nome: string;
+  _id: string;
+  student_id_keep: string;
+  name: string;
 };
 
 type AxiosResponse = {
   result: Student[];
-  current_page: number;
-  last_page: number;
+  total_students: number;
+  // last_page: number;
 };
 
 export function Students(): JSX.Element {
   const [students, setStudents] = useState<Student[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
-  const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState(true);
 
   // const pages = useMemo(() => {
@@ -37,11 +37,12 @@ export function Students(): JSX.Element {
   //   return
   // }, [currentPage, lastPage]);
 
-  const pages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  // const pages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const limit = 10;
 
-  function handleChangePage(page: number) {
-    setCurrentPage(page);
-  }
+  // function handleChangePage(page: number) {
+  //   setCurrentPage(page);
+  // }
 
   useEffect(() => {
     api
@@ -49,15 +50,13 @@ export function Students(): JSX.Element {
         params: {
           search,
           limit,
-          page: currentPage,
         },
       })
       .then(response => {
         setStudents(response.data.result);
-        setCurrentPage(response.data.current_page);
         setLoading(false);
       });
-  }, [search, limit, currentPage]);
+  }, [search, limit]);
 
   return (
     <div className={styles.container}>
@@ -96,12 +95,12 @@ export function Students(): JSX.Element {
               </thead>
               <tbody>
                 {students.map(student => (
-                  <tr key={student.aluno_id}>
-                    <td>{student.aluno_id}</td>
-                    <td>{student.nome}</td>
+                  <tr key={student._id}>
+                    <td>{student.student_id_keep}</td>
+                    <td>{student.name}</td>
                     <td>
                       <div>
-                        <Link to={`/students/${student.aluno_id}/logs`}>
+                        <Link to={`/students/${student._id}/logs`}>
                           <FiEye size={16} />
                           Visualizar
                         </Link>
@@ -111,11 +110,11 @@ export function Students(): JSX.Element {
                 ))}
               </tbody>
             </table>
-            <Pagination
+            {/* <Pagination
               pages={pages}
               activePage={currentPage}
               onClick={handleChangePage}
-            />
+            /> */}
           </>
         )}
       </main>
