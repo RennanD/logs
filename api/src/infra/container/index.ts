@@ -3,7 +3,7 @@ import { StudentLogsRepositoryMongoose } from '../../modules/students/infra/mong
 import { StudentsRepositoryMongoose } from '../../modules/students/infra/mongoose/repositories/StudentsRepositoryMongoose';
 import { IStudentLogsRepository } from '../../modules/students/repositories/IStudentLogsRepository';
 import { IStudentsRepository } from '../../modules/students/repositories/IStudentsRepository';
-import { IQueueProvider } from '../providers/IImportQueueProvider';
+import { IQueueProvider } from '../providers/IQueueProvider';
 import { BullMQProvider } from '../providers/implementations/queue/BullMQProvider';
 
 container.registerSingleton<IStudentsRepository>(

@@ -1,6 +1,6 @@
 import { Queue, Worker, Processor, QueueScheduler } from 'bullmq';
 
-import { IQueueProvider } from '../../IImportQueueProvider';
+import { IQueueProvider } from '../../IQueueProvider';
 
 import redisConfig from '../../../../configs/redis';
 
