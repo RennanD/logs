@@ -25,7 +25,7 @@ export class BullMQProvider implements IQueueProvider {
   }
 
   async addJob<T>(job: T, name?: string): Promise<void> {
-    await this.queue.add(name!, { data: job }, { delay: 3000 });
+    await this.queue.add(name!, job, { delay: 3000 });
   }
 
   async addManyJobs<T>(name: string, jobs: T[]): Promise<void> {

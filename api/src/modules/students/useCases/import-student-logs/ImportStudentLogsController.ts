@@ -12,7 +12,10 @@ export class ImportStudentLogsController {
     );
 
     if (file) {
-      importStudentLogQueue.addJob<IImportStudentLogs>({ file });
+      importStudentLogQueue.addJob<IImportStudentLogs>(
+        { file },
+        'import-student-log-file',
+      );
     }
 
     return response.json({

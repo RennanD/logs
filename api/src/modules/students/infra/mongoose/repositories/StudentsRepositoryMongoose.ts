@@ -19,6 +19,7 @@ export class StudentsRepositoryMongoose implements IStudentsRepository {
         },
       ],
     })
+      .select('name student_id_keep')
       .skip(Number(params?.offset) || 0)
       .limit(Number(params?.limit) || 10);
   }

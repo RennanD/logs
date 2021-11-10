@@ -50,7 +50,7 @@ export class ImportStudentLogsUseCase {
 
         parseFile
           .on('data', async line => {
-            const [name, student_id_keep, ip, url, date] = line;
+            const [, name, student_id_keep, ip, url, date] = line;
 
             const _id = new Types.ObjectId();
 
@@ -116,10 +116,12 @@ export class ImportStudentLogsUseCase {
           logs: logsIds,
         });
 
-        console.log(`aluno ${student_id_keep} criado`);
+        // console.log(`aluno ${student_id_keep} criado`);
 
         cb();
       },
+    }).on('finish', () => {
+      console.log('teminou', new Date());
     });
 
     await pipelineAsync(readableStream, writableStream);
