@@ -9,6 +9,8 @@ import { IHashProvider } from '../providers/IHashProvider';
 import { BcryptHashProvider } from '../providers/implementations/hash/BcryptHashProvider';
 import { IUsersRepository } from '../../modules/users/repositories/IUsersRepository';
 import { UsersRepositoryMongoose } from '../../modules/users/infra/mongoose/repositories/UsersRepositoryMongoose';
+import { IRolesRepository } from '../../modules/users/repositories/IRolesRepository';
+import { RolesRepositoryMongoose } from '../../modules/users/infra/mongoose/repositories/RolesRepositoryMongoose';
 
 // Repositories
 
@@ -20,6 +22,11 @@ container.registerSingleton<IStudentsRepository>(
 container.registerSingleton<IStudentLogsRepository>(
   'StudentLogsRepository',
   StudentLogsRepositoryMongoose,
+);
+
+container.registerSingleton<IRolesRepository>(
+  'RolesRepository',
+  RolesRepositoryMongoose,
 );
 
 container.registerSingleton<IUsersRepository>(

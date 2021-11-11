@@ -9,6 +9,7 @@ import { IUsersRepository } from '../../repositories/IUsersRepository';
 
 import jwtConfig from '../../../../configs/jwt';
 import { ServerError } from '../../../../infra/errors/ServerError';
+import { IRolesRepository } from '../../repositories/IRolesRepository';
 
 interface IRequest {
   email: string;
@@ -31,6 +32,8 @@ export class AuthenticateUserUseCase {
     private usersRepository: IUsersRepository,
     @inject('HashProvider')
     private hashProvider: IHashProvider,
+    @inject('RolesRepository')
+    private rolesRepository: IRolesRepository,
   ) {}
 
   async run({ email, password }: IRequest): Promise<IResponse> {
@@ -50,13 +53,19 @@ export class AuthenticateUserUseCase {
         throw new UnauthozitedError('Crendeciais inválidas', 'auth_error');
       }
 
+      // const role = await this.rolesRepository.findById(
+      //   existentUser.role as unknown as string,
+      // );
+
+      // console.log(role);
+
       const subject = JSON.stringify({
         id: existentUser._id,
       });
 
       const token = sign({}, String(jwtConfig.secret), {
         subject,
-        expiresIn: '1d',
+        expiresIn: jwtConfig.expiresIn,
       });
 
       return {
