@@ -9,8 +9,11 @@ const usersRouter = Router();
 const createUserController = new CreateUserController();
 
 usersRouter.use(ensureAuthenticated);
-usersRouter.use(accessControll('create_users'));
 
-usersRouter.post('/', createUserController.handle);
+usersRouter.post(
+  '/',
+  accessControll('create_users'),
+  createUserController.handle,
+);
 
 export { usersRouter };

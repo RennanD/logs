@@ -9,7 +9,11 @@ const permissionsRouter = Router();
 const listPermissionsController = new ListPermissionsController();
 
 permissionsRouter.use(ensureAuthenticated);
-permissionsRouter.use(accessControll('list_permissions'));
-permissionsRouter.get('/', listPermissionsController.handle);
+
+permissionsRouter.get(
+  '/',
+  accessControll('list_permissions'),
+  listPermissionsController.handle,
+);
 
 export { permissionsRouter };

@@ -17,7 +17,7 @@ export class RolesRepositoryMongoose implements IRolesRepository {
           },
         },
       ],
-    });
+    }).select('title slug');
   }
 
   async findById(id: string): Promise<IRoleSchema | null> {
