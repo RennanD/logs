@@ -1,13 +1,7 @@
-export class ServerError {
-  public readonly message: string;
+import { AppError } from './AppError';
 
-  public readonly status_code: number;
-
-  public readonly type_error: string;
-
+export class ServerError extends AppError {
   constructor(message: string) {
-    this.message = `Internal server error - ${message}`;
-    this.status_code = 500;
-    this.type_error = 'server_error';
+    super(`Internal server error - ${message}`, 500, 'server_error');
   }
 }

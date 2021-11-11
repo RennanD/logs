@@ -1,13 +1,7 @@
-export class ForbiddenError {
-  public readonly message: string;
+import { AppError } from './AppError';
 
-  public readonly status_code: number;
-
-  public readonly type_error: string;
-
+export class ForbiddenError extends AppError {
   constructor(message: string) {
-    this.message = message;
-    this.status_code = 403;
-    this.type_error = 'forbbiend_error';
+    super(message, 403, 'forbbiend_error');
   }
 }
