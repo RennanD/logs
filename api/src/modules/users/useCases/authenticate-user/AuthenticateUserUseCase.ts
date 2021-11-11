@@ -60,7 +60,7 @@ export class AuthenticateUserUseCase {
       );
 
       const subject = JSON.stringify({
-        id: existentUser._id,
+        user_id: existentUser._id,
         role: {
           title: role?.title,
           slug: role?.slug,

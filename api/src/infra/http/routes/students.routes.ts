@@ -9,6 +9,7 @@ import uploadConfig from '../../../configs/upload';
 import { ImportStudentLogsController } from '../../../modules/students/useCases/import-student-logs/ImportStudentLogsController';
 import { ListStudentsController } from '../../../modules/students/useCases/list-students/ListStudentsController';
 import { ListStudentLogsController } from '../../../modules/students/useCases/list-student-logs/ListStudentLogsController';
+import { ensureAuthenticated } from '../middlewares/ensureAuthenticated';
 
 const studentsRouter = Router();
 const upload = multer(uploadConfig);
@@ -21,10 +22,13 @@ const createStudentLogsController = new CreateStudentLogsController();
 const importStudentsController = new ImportStudentsController();
 const importStudentLogsController = new ImportStudentLogsController();
 
+studentsRouter.post('/logs', createStudentLogsController.handle);
+
+// Authenticated Routes
+studentsRouter.use(ensureAuthenticated);
+
 studentsRouter.get('/', listStudentsController.handle);
 studentsRouter.get('/:student_id/logs', listStudentLogsController.handle);
-
-studentsRouter.post('/logs', createStudentLogsController.handle);
 
 studentsRouter.post(
   '/import',
