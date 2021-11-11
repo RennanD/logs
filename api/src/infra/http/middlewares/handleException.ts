@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { ServerError } from '../../errors/ServerError';
-import { UnauthozitedError } from '../../errors/UnauthozitedError';
+import { AppError } from '../../errors/AppError';
 
 export async function handleException(
-  error: ServerError | UnauthozitedError,
+  error: AppError,
   request: Request,
   response: Response,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
