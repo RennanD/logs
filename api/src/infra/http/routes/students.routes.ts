@@ -10,6 +10,7 @@ import { ImportStudentLogsController } from '../../../modules/students/useCases/
 import { ListStudentsController } from '../../../modules/students/useCases/list-students/ListStudentsController';
 import { ListStudentLogsController } from '../../../modules/students/useCases/list-student-logs/ListStudentLogsController';
 import { ensureAuthenticated } from '../middlewares/ensureAuthenticated';
+import { accessControll } from '../middlewares/accessControll';
 
 const studentsRouter = Router();
 const upload = multer(uploadConfig);
@@ -27,11 +28,16 @@ studentsRouter.post('/logs', createStudentLogsController.handle);
 // Authenticated Routes
 studentsRouter.use(ensureAuthenticated);
 
+// List Students Logs permission
+studentsRouter.use(accessControll('list_student_logs'));
 studentsRouter.get('/', listStudentsController.handle);
 studentsRouter.get('/:student_id/logs', listStudentLogsController.handle);
 
+// Import Logs Permissions
+studentsRouter.use(accessControll('import_logs'));
 studentsRouter.post(
   '/import',
+
   upload.single('file'),
   importStudentsController.handle,
 );

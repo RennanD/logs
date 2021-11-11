@@ -23,6 +23,7 @@
     "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
     "no-new": "off",
     "no-param-reassign": "off",
+    "func-names": "off",
     "no-use-before-define": "off",
     "class-methods-use-this": "off",
     "import/prefer-default-export": "off",
