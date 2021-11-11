@@ -4,7 +4,7 @@ import { studentsRouter } from './students.routes';
 
 const routes = Router();
 
-routes.use('/students', studentsRouter);
 routes.use('/sessions', sessionsRouter);
+routes.use('/students', studentsRouter);
 
 export { routes };

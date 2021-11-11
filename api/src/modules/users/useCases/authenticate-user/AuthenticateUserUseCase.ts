@@ -8,7 +8,6 @@ import { IHashProvider } from '../../../../infra/providers/IHashProvider';
 import { IUsersRepository } from '../../repositories/IUsersRepository';
 
 import jwtConfig from '../../../../configs/jwt';
-import { IRoleSchema } from '../../infra/mongoose/schemas/Role';
 import { ServerError } from '../../../../infra/errors/ServerError';
 
 interface IRequest {
@@ -51,16 +50,13 @@ export class AuthenticateUserUseCase {
         throw new UnauthozitedError('Crendeciais inválidas', 'auth_error');
       }
 
-      const role = existentUser.role as unknown as IRoleSchema;
-
       const subject = JSON.stringify({
         id: existentUser._id,
-        role: role.slug,
       });
 
       const token = sign({}, String(jwtConfig.secret), {
         subject,
-        expiresIn: jwtConfig.expiresIn,
+        expiresIn: '1d',
       });
 
       return {

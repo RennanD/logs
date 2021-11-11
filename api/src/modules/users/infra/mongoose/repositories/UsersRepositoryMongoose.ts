@@ -28,7 +28,7 @@ export class UsersRepositoryMongoose implements IUsersRepository {
   }
 
   async findByEmail(email: string): Promise<IUserSchema | null> {
-    return User.findOne({ email }).populate('role');
+    return User.findOne({ email });
   }
 
   async countAll(search: string): Promise<number> {

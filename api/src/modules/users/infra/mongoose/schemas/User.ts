@@ -1,11 +1,12 @@
 import { model, Schema, Document } from 'mongoose';
+import { IRoleSchema } from './Role';
 
 export interface IUserSchema extends Document {
   name: string;
   email: string;
   password: string;
   avatar?: string;
-  role: Schema.Types.ObjectId;
+  role: IRoleSchema;
 }
 
 const UserSchema = new Schema(
