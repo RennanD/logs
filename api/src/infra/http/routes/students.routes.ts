@@ -37,7 +37,6 @@ studentsRouter.get('/:student_id/logs', listStudentLogsController.handle);
 studentsRouter.use(accessControll('import_logs'));
 studentsRouter.post(
   '/import',
-
   upload.single('file'),
   importStudentsController.handle,
 );
