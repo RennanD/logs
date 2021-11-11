@@ -4,8 +4,6 @@ import { ICreateStudentLogDTO } from '../../dtos/ICreateStudentLogDTO';
 import { IStudentLogsRepository } from '../../repositories/IStudentLogsRepository';
 import { IStudentsRepository } from '../../repositories/IStudentsRepository';
 
-import { ServerError } from '../../../../infra/errors/ServerError';
-
 @injectable()
 export class CreateStudentLogsUseCase {
   constructor(
@@ -22,36 +20,29 @@ export class CreateStudentLogsUseCase {
     ip,
     url,
   }: ICreateStudentLogDTO): Promise<void> {
-    try {
-      const log = await this.studentLogsRepository.create({
-        name,
-        student_id_keep,
-        url,
-        ip,
-        date,
-      });
+    const log = await this.studentLogsRepository.create({
+      name,
+      student_id_keep,
+      url,
+      ip,
+      date,
+    });
 
-      const existentStudent = await this.studentRepository.findByKeepId(
-        student_id_keep,
-      );
+    const existentStudent = await this.studentRepository.findByKeepId(
+      student_id_keep,
+    );
 
-      if (existentStudent) {
-        existentStudent.student_logs = [
-          ...existentStudent.student_logs,
-          log._id,
-        ];
-        await this.studentRepository.save(existentStudent);
+    if (existentStudent) {
+      existentStudent.student_logs = [...existentStudent.student_logs, log._id];
+      await this.studentRepository.save(existentStudent);
 
-        return;
-      }
-
-      await this.studentRepository.create({
-        name,
-        student_id_keep,
-        logs: [log._id],
-      });
-    } catch (error) {
-      throw new ServerError(error.message);
+      return;
     }
+
+    await this.studentRepository.create({
+      name,
+      student_id_keep,
+      logs: [log._id],
+    });
   }
 }

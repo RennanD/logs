@@ -3,7 +3,6 @@ import { IRolesRepository } from '../../repositories/IRolesRepository';
 
 import { BadRequestError } from '../../../../infra/errors/BadRequestError';
 import { IPermissionsRepository } from '../../repositories/IPermissionsRepository';
-import { ServerError } from '../../../../infra/errors/ServerError';
 
 interface IRequest {
   title: string;
