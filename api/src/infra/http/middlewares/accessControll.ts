@@ -10,7 +10,8 @@ type IPermissions =
   | 'edit_roles'
   | 'import_logs'
   | 'list_student_logs'
-  | 'test_permission'
+  | 'list_permissions'
+  | 'list_users'
   | 'list_admins_logs';
 
 export function accessControll(permission: IPermissions) {
