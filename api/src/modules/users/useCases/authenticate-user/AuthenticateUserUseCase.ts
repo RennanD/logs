@@ -53,14 +53,19 @@ export class AuthenticateUserUseCase {
         throw new UnauthozitedError('Crendeciais inválidas', 'auth_error');
       }
 
-      // const role = await this.rolesRepository.findById(
-      //   existentUser.role as unknown as string,
-      // );
+      const role = await this.rolesRepository.findById(existentUser.role._id);
 
-      // console.log(role);
+      const rolePermissions = role?.permissions.map(
+        permission => permission.slug,
+      );
 
       const subject = JSON.stringify({
         id: existentUser._id,
+        role: {
+          title: role?.title,
+          slug: role?.slug,
+          permissions: rolePermissions,
+        },
       });
 
       const token = sign({}, String(jwtConfig.secret), {
