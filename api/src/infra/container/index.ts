@@ -5,6 +5,12 @@ import { IStudentLogsRepository } from '../../modules/students/repositories/IStu
 import { IStudentsRepository } from '../../modules/students/repositories/IStudentsRepository';
 import { IQueueProvider } from '../providers/IQueueProvider';
 import { BullMQProvider } from '../providers/implementations/queue/BullMQProvider';
+import { IHashProvider } from '../providers/IHashProvider';
+import { BcryptHashProvider } from '../providers/implementations/hash/BcryptHashProvider';
+import { IUsersRepository } from '../../modules/users/repositories/IUsersRepository';
+import { UsersRepositoryMongoose } from '../../modules/users/infra/mongoose/repositories/UsersRepositoryMongoose';
+
+// Repositories
 
 container.registerSingleton<IStudentsRepository>(
   'StudentsRepository',
@@ -16,7 +22,16 @@ container.registerSingleton<IStudentLogsRepository>(
   StudentLogsRepositoryMongoose,
 );
 
+container.registerSingleton<IUsersRepository>(
+  'UsersRepository',
+  UsersRepositoryMongoose,
+);
+
+// Providers
+
 container.registerInstance<IQueueProvider>(
   'ImportStudentLogQueueProvider',
   new BullMQProvider('import-student-logs-queue'),
 );
+
+container.registerSingleton<IHashProvider>('HashProvider', BcryptHashProvider);

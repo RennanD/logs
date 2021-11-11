@@ -1,4 +1,3 @@
-import { Schema } from 'mongoose';
 import { ICreateUsersDTO } from '../../../dtos/ICreateUsersDTO';
 import {
   IFindParams,
@@ -25,11 +24,11 @@ export class UsersRepositoryMongoose implements IUsersRepository {
   }
 
   async findById(id: string): Promise<IUserSchema | null> {
-    return User.findById(id);
+    return User.findById(id).populate('role');
   }
 
   async findByEmail(email: string): Promise<IUserSchema | null> {
-    return User.findOne({ email });
+    return User.findOne({ email }).populate('role');
   }
 
   async countAll(search: string): Promise<number> {
@@ -50,7 +49,7 @@ export class UsersRepositoryMongoose implements IUsersRepository {
     await User.create(userData);
   }
 
-  save(user: IUserSchema): Promise<void> {
-    throw new Error('Method not implemented.');
+  async save(user: IUserSchema): Promise<void> {
+    await user.save();
   }
 }
