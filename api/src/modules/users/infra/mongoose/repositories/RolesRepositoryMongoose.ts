@@ -21,11 +21,11 @@ export class RolesRepositoryMongoose implements IRolesRepository {
   }
 
   async findById(id: string): Promise<IRoleSchema | null> {
-    return Role.findById(id);
+    return Role.findById(id).populate('permissions');
   }
 
   async findBySlug(slug: string): Promise<IRoleSchema | null> {
-    return Role.findOne({ slug });
+    return Role.findOne({ slug }).populate('permissions');
   }
 
   async countAll(params: IFindParams): Promise<number> {

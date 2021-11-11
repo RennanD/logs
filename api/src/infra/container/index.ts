@@ -11,6 +11,8 @@ import { IUsersRepository } from '../../modules/users/repositories/IUsersReposit
 import { UsersRepositoryMongoose } from '../../modules/users/infra/mongoose/repositories/UsersRepositoryMongoose';
 import { IRolesRepository } from '../../modules/users/repositories/IRolesRepository';
 import { RolesRepositoryMongoose } from '../../modules/users/infra/mongoose/repositories/RolesRepositoryMongoose';
+import { IPermissionsRepository } from '../../modules/users/repositories/IPermissionsRepository';
+import { PermissionsRepositoryMongoose } from '../../modules/users/infra/mongoose/repositories/PermissionsRepositoryMongoose';
 
 // Repositories
 
@@ -22,6 +24,11 @@ container.registerSingleton<IStudentsRepository>(
 container.registerSingleton<IStudentLogsRepository>(
   'StudentLogsRepository',
   StudentLogsRepositoryMongoose,
+);
+
+container.registerSingleton<IPermissionsRepository>(
+  'PermissionsRepository',
+  PermissionsRepositoryMongoose,
 );
 
 container.registerSingleton<IRolesRepository>(

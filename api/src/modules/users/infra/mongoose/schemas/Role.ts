@@ -1,9 +1,10 @@
 import { model, Schema, Document } from 'mongoose';
+import { IPermissionSchema } from './Permission';
 
 export interface IRoleSchema extends Document {
   title: string;
   slug: string;
-  permissions: Schema.Types.ObjectId[];
+  permissions: IPermissionSchema[];
 }
 
 const RoleSchema = new Schema(
