@@ -4,6 +4,8 @@ import fs from 'fs';
 import { inject, injectable } from 'tsyringe';
 import { IStudentsRepository } from '../../repositories/IStudentsRepository';
 
+import { ServerError } from '../../../../infra/errors/ServerError';
+
 interface IImportStudents {
   name: string;
   student_id_keep: string;
@@ -45,21 +47,25 @@ export class ImportStudentsUseCase {
   }
 
   async run(file: Express.Multer.File): Promise<void> {
-    const students = await this.loadStudents(file);
+    try {
+      const students = await this.loadStudents(file);
 
-    students.map(async student => {
-      const { name, student_id_keep } = student;
+      students.map(async student => {
+        const { name, student_id_keep } = student;
 
-      const existentStudent = await this.studentsRepository.findByKeepId(
-        student_id_keep,
-      );
-
-      if (!existentStudent) {
-        this.studentsRepository.create({
-          name,
+        const existentStudent = await this.studentsRepository.findByKeepId(
           student_id_keep,
-        });
-      }
-    });
+        );
+
+        if (!existentStudent) {
+          this.studentsRepository.create({
+            name,
+            student_id_keep,
+          });
+        }
+      });
+    } catch (error) {
+      throw new ServerError(error.message);
+    }
   }
 }

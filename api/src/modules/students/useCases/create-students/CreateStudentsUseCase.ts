@@ -2,6 +2,8 @@ import { inject, injectable } from 'tsyringe';
 import { ICreateStudentDTO } from '../../dtos/ICreateStudentDTO';
 import { IStudentsRepository } from '../../repositories/IStudentsRepository';
 
+import { ServerError } from '../../../../infra/errors/ServerError';
+
 @injectable()
 export class CreateStudentsUseCase {
   constructor(
@@ -10,15 +12,19 @@ export class CreateStudentsUseCase {
   ) {}
 
   async run({ name, student_id_keep }: ICreateStudentDTO): Promise<void> {
-    const existentStudent = await this.studentRepository.findByKeepId(
-      student_id_keep,
-    );
+    try {
+      const existentStudent = await this.studentRepository.findByKeepId(
+        student_id_keep,
+      );
 
-    if (existentStudent) return;
+      if (existentStudent) return;
 
-    await this.studentRepository.create({
-      name,
-      student_id_keep,
-    });
+      await this.studentRepository.create({
+        name,
+        student_id_keep,
+      });
+    } catch (error) {
+      throw new ServerError(error.message);
+    }
   }
 }

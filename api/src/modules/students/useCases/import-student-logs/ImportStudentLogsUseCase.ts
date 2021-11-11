@@ -11,6 +11,8 @@ import { Schema, Types } from 'mongoose';
 import { IStudentsRepository } from '../../repositories/IStudentsRepository';
 import { IStudentLogsRepository } from '../../repositories/IStudentLogsRepository';
 
+import { ServerError } from '../../../../infra/errors/ServerError';
+
 interface IImportStudentLogs {
   student_id_keep: string;
   logs: {
@@ -33,97 +35,103 @@ export class ImportStudentLogsUseCase {
   ) {}
 
   async run(file: Express.Multer.File): Promise<void> {
-    const pipelineAsync = promisify(pipeline);
+    try {
+      const pipelineAsync = promisify(pipeline);
 
-    const { studentsRepository, studentLogsRepository } = this;
+      const { studentsRepository, studentLogsRepository } = this;
 
-    console.log('começou', new Date());
+      console.log('começou', new Date());
 
-    const readableStream = new Readable({
-      async read() {
-        const stream = fs.createReadStream(file.path);
-        const studentLogs: IImportStudentLogs[] = [];
+      const readableStream = new Readable({
+        async read() {
+          const stream = fs.createReadStream(file.path);
+          const studentLogs: IImportStudentLogs[] = [];
 
-        const parseFile = csvParse();
+          const parseFile = csvParse();
 
-        stream.pipe(parseFile);
+          stream.pipe(parseFile);
 
-        parseFile
-          .on('data', async line => {
-            const [, name, student_id_keep, ip, url, date] = line;
+          parseFile
+            .on('data', async line => {
+              const [, name, student_id_keep, ip, url, date] = line;
 
-            const _id = new Types.ObjectId();
+              const _id = new Types.ObjectId();
 
-            const findStudentIndex = studentLogs.findIndex(
-              studentLog => studentLog.student_id_keep === student_id_keep,
-            );
+              const findStudentIndex = studentLogs.findIndex(
+                studentLog => studentLog.student_id_keep === student_id_keep,
+              );
 
-            if (findStudentIndex >= 0) {
-              studentLogs[findStudentIndex].logs.push({
-                _id,
-                name,
-                student_id_keep,
-                ip,
-                url,
-                date,
+              if (findStudentIndex >= 0) {
+                studentLogs[findStudentIndex].logs.push({
+                  _id,
+                  name,
+                  student_id_keep,
+                  ip,
+                  url,
+                  date,
+                });
+              } else {
+                studentLogs.push({
+                  student_id_keep,
+                  logs: [{ _id, name, student_id_keep, ip, url, date }],
+                });
+              }
+
+              // console.log(`Log adicionado na fila [${new Date().getTime()}]`);
+            })
+            .on('end', () => {
+              studentLogs.forEach(log => {
+                this.push(JSON.stringify(log));
               });
-            } else {
-              studentLogs.push({
-                student_id_keep,
-                logs: [{ _id, name, student_id_keep, ip, url, date }],
-              });
-            }
-
-            // console.log(`Log adicionado na fila [${new Date().getTime()}]`);
-          })
-          .on('end', () => {
-            studentLogs.forEach(log => {
-              this.push(JSON.stringify(log));
+              this.push(null);
+              console.log('leu tudo');
             });
-            this.push(null);
-            console.log('leu tudo');
-          });
-      },
-    });
+        },
+      });
 
-    const writableStream = new Writable({
-      async write(chunk, encoding, cb) {
-        const data: IImportStudentLogs = JSON.parse(chunk);
+      const writableStream = new Writable({
+        async write(chunk, encoding, cb) {
+          const data: IImportStudentLogs = JSON.parse(chunk);
 
-        const { student_id_keep, logs } = data;
+          const { student_id_keep, logs } = data;
 
-        await studentLogsRepository.createMany(logs);
+          await studentLogsRepository.createMany(logs);
 
-        const student = await studentsRepository.findByKeepId(student_id_keep);
-
-        if (student) {
-          const logsIds = logs.map(
-            log => log._id! as unknown as Schema.Types.ObjectId,
+          const student = await studentsRepository.findByKeepId(
+            student_id_keep,
           );
-          student.student_logs = [...student.student_logs, ...logsIds];
-          studentsRepository.save(student);
 
-          console.log(`logs adicionados para ${student_id_keep}`);
+          if (student) {
+            const logsIds = logs.map(
+              log => log._id! as unknown as Schema.Types.ObjectId,
+            );
+            student.student_logs = [...student.student_logs, ...logsIds];
+            studentsRepository.save(student);
 
-          return;
-        }
+            console.log(`logs adicionados para ${student_id_keep}`);
 
-        const logsIds = logs.map(log => log._id!);
+            return;
+          }
 
-        await studentsRepository.create({
-          student_id_keep,
-          name: logs[0].name,
-          logs: logsIds,
-        });
+          const logsIds = logs.map(log => log._id!);
 
-        // console.log(`aluno ${student_id_keep} criado`);
+          await studentsRepository.create({
+            student_id_keep,
+            name: logs[0].name,
+            logs: logsIds,
+          });
 
-        cb();
-      },
-    }).on('finish', () => {
-      console.log('teminou', new Date());
-    });
+          // console.log(`aluno ${student_id_keep} criado`);
 
-    await pipelineAsync(readableStream, writableStream);
+          cb();
+        },
+      }).on('finish', () => {
+        console.log('teminou', new Date());
+      });
+
+      await pipelineAsync(readableStream, writableStream);
+    } catch (error) {
+      throw new ServerError(error.message);
+    }
   }
 }
