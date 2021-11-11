@@ -12,7 +12,10 @@ type IPermissions =
   | 'list_student_logs'
   | 'list_permissions'
   | 'list_users'
-  | 'list_admins_logs';
+  | 'list_admins_logs'
+  | 'list_roles'
+  | 'create_permissions'
+  | 'edit_permissions';
 
 export function accessControll(permission: IPermissions) {
   return async function (

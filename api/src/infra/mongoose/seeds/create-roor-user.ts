@@ -20,12 +20,32 @@ async function createRootUser() {
       slug: 'edit_users',
     },
     {
+      title: 'Listar Usuários',
+      slug: 'list_users',
+    },
+    {
       title: 'Cadatrar Perfis',
       slug: 'create_roles',
     },
     {
       title: 'Editar Perfis',
       slug: 'edit_roles',
+    },
+    {
+      title: 'Listar Perfis',
+      slug: 'list_roles',
+    },
+    {
+      title: 'Cadastrar Permissões',
+      slug: 'create_permissions',
+    },
+    {
+      title: 'Editar Permissões',
+      slug: 'edit_permissions',
+    },
+    {
+      title: 'Listar Permissões',
+      slug: 'list_permissions',
     },
     {
       title: 'Importar Logs',
