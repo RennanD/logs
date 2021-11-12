@@ -36,7 +36,11 @@
 body {
   background-color: var(--gray90);
   color: var(--gray5);
-  font-family: Roboto, sans-serif;
+  font-family: Ubuntu, sans-serif;
+}
+
+button, textarea, input {
+  font-family: Ubuntu, sans-serif;
 }
 
 a {

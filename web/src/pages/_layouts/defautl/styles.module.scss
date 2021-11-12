@@ -1,0 +1,16 @@
+.container {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 0.7fr 3fr;
+  gap: 10px;
+
+  > main {
+    padding: 0 40px;
+    overflow: hidden;
+    overflow-y: scroll;
+  }
+  
+  > section {
+    display: flex;
+  }
+}

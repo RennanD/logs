@@ -1,8 +1,10 @@
 import { FormEvent, useState } from 'react';
+import { FiLock, FiMail } from 'react-icons/fi';
 import styles from './styles.module.scss';
 
 import loginImage from '../../assets/login3.svg';
 import { api } from '../../services/api';
+import { TextInput } from '../../components/TextInput';
 
 export function SignIn(): JSX.Element {
   const [email, setEmail] = useState('');
@@ -23,45 +25,29 @@ export function SignIn(): JSX.Element {
 
   return (
     <div className={styles.container}>
-      <main>
-        <aside>
-          <img src={loginImage} alt="" />
-          <h2>
-            Realize login na plataforma <br /> para ter acesso os logs
-          </h2>
-        </aside>
-        <form onSubmit={handleLogin}>
-          <h1>
-            Log Monitor <span>.</span>
-          </h1>
-
-          <section>
-            <label htmlFor="email">E-mail</label>
-            <input
-              id="email"
+      <div className={styles.content}>
+        <div className={styles.animationContainer}>
+          <h1>Entrar</h1>
+          <span>Faça logins para acessar os logs</span>
+          <form>
+            <TextInput
+              icon={FiMail}
               value={email}
               onChange={e => setEmail(e.target.value)}
-              type="text"
-              placeholder="Digite seu e-mail..."
+              placeholder="Digite seu email..."
             />
-          </section>
 
-          <section>
-            <label htmlFor="password">Senha</label>
-            <input
-              id="password"
+            <TextInput
+              icon={FiLock}
               value={password}
               onChange={e => setPassword(e.target.value)}
-              type="password"
               placeholder="Digite sua senha..."
+              type="password"
             />
-          </section>
-
-          <button type="submit">
-            {loading ? <div className={styles.blob} /> : <span>Entrar</span>}
-          </button>
-        </form>
-      </main>
+          </form>
+        </div>
+      </div>
+      <div className={styles.background} />
     </div>
   );
 }

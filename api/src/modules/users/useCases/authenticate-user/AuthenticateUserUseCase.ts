@@ -21,6 +21,11 @@ interface IResponse {
     name: string;
     email: string;
     avatar: string;
+    role: {
+      title: string;
+      slug: string;
+      permissions: string[];
+    };
   };
 }
 
@@ -59,11 +64,6 @@ export class AuthenticateUserUseCase {
 
     const subject = JSON.stringify({
       user_id: existentUser._id,
-      role: {
-        title: role?.title,
-        slug: role?.slug,
-        permissions: rolePermissions,
-      },
     });
 
     const token = sign({}, String(jwtConfig.secret), {
@@ -77,6 +77,11 @@ export class AuthenticateUserUseCase {
         name: existentUser.name,
         email: existentUser.email,
         avatar: existentUser.avatar || String(process.env.AVATAR_URL),
+        role: {
+          title: role!.title,
+          slug: role!.slug,
+          permissions: rolePermissions!,
+        },
       },
     };
   }
