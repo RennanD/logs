@@ -1,4 +1,5 @@
 import { useState, useContext, ReactNode, createContext } from 'react';
+import { api } from '../services/api';
 
 type SingInProps = {
   email: string;
@@ -21,25 +22,56 @@ type User = {
 
 interface AuthContextData {
   user: User;
-  singIn: (singInData: SingInProps) => Promise<void>;
-  // token: string;
+  signIn: (singInData: SingInProps) => Promise<void>;
 }
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
+interface AxiosResponse {
+  user: User;
+  token: string;
+}
+
 const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
-  const [user, setUser] = useState<User>({} as User);
+  const [user, setUser] = useState<User>(() => {
+    const storagedUser = localStorage.getItem('@log-monitor:user');
+
+    if (!storagedUser) {
+      return {} as User;
+    }
+
+    const token = localStorage.getItem('@log-monitor:token');
+
+    api.defaults.headers.common.authorization = `Bearer ${token}`;
+
+    return JSON.parse(storagedUser);
+  });
 
   async function handleSingIn({ email, password }: SingInProps) {
-    console.log({ email, password });
+    try {
+      const response = await api.post<AxiosResponse>('/sessions', {
+        email,
+        password,
+      });
+
+      const { user: dataUser, token } = response.data;
+
+      localStorage.setItem('@log-monitor:user', JSON.stringify(dataUser));
+      localStorage.setItem('@log-monitor:token', token);
+
+      setUser(dataUser);
+      api.defaults.headers.common.authorization = `Bearer ${token}`;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   return (
-    <AuthContext.Provider value={{ user, singIn: handleSingIn }}>
+    <AuthContext.Provider value={{ user, signIn: handleSingIn }}>
       {children}
     </AuthContext.Provider>
   );

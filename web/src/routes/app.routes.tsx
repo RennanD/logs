@@ -13,7 +13,13 @@ export function AppRoutes(): JSX.Element {
     <Switch>
       <Route path="/login" component={SignIn} />
       <Route path="/" exact component={Dashboard} isPrivate />
-      <Route path="/students" exact component={Students} isPrivate />
+      <Route
+        path="/students"
+        exact
+        component={Students}
+        isPrivate
+        permission="list_student_logs"
+      />
       <Route path="/students/:id/logs" component={StudentsLogs} isPrivate />
     </Switch>
   );

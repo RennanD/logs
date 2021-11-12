@@ -2,26 +2,23 @@ import { FormEvent, useState } from 'react';
 import { FiLock, FiMail } from 'react-icons/fi';
 import styles from './styles.module.scss';
 
-import { api } from '../../services/api';
 import { TextInput } from '../../components/TextInput';
 import { Button } from '../../components/Button';
+import { useAuth } from '../../hooks/auth';
 
 export function SignIn(): JSX.Element {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const { signIn } = useAuth();
+
   async function handleLogin(event: FormEvent) {
     setLoading(true);
     event.preventDefault();
 
     try {
-      const response = await api.post('/sessions', {
-        email,
-        password,
-      });
-
-      setLoading(false);
+      await signIn({ email, password });
     } catch (error) {
       setLoading(false);
     }
@@ -35,7 +32,7 @@ export function SignIn(): JSX.Element {
             <h1>
               Entrar <span>.</span>
             </h1>
-            <span>Faça logins para acessar os logs</span>
+            <span>Faça logins para acessar os logs do sistema</span>
             <section>
               <TextInput
                 icon={FiMail}

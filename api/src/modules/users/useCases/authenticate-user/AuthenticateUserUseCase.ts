@@ -18,6 +18,7 @@ interface IRequest {
 interface IResponse {
   token: string;
   user: {
+    _id: string;
     name: string;
     email: string;
     avatar: string;
@@ -74,6 +75,7 @@ export class AuthenticateUserUseCase {
     return {
       token,
       user: {
+        _id: existentUser._id,
         name: existentUser.name,
         email: existentUser.email,
         avatar: existentUser.avatar || String(process.env.AVATAR_URL),
