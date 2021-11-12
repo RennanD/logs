@@ -2,7 +2,6 @@ import { FormEvent, useState } from 'react';
 import { FiLock, FiMail } from 'react-icons/fi';
 import styles from './styles.module.scss';
 
-import loginImage from '../../assets/login3.svg';
 import { api } from '../../services/api';
 import { TextInput } from '../../components/TextInput';
 import { Button } from '../../components/Button';
@@ -16,19 +15,23 @@ export function SignIn(): JSX.Element {
     setLoading(true);
     event.preventDefault();
 
-    const response = await api.post('/sessions', {
-      email,
-      password,
-    });
+    try {
+      const response = await api.post('/sessions', {
+        email,
+        password,
+      });
 
-    setLoading(false);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
   }
 
   return (
     <div className={styles.container}>
       <div className={styles.content}>
         <div className={styles.animationContainer}>
-          <form>
+          <form onSubmit={handleLogin}>
             <h1>
               Entrar <span>.</span>
             </h1>
@@ -50,7 +53,7 @@ export function SignIn(): JSX.Element {
               />
             </section>
 
-            <Button>Entrar</Button>
+            <Button loading={loading}>Entrar</Button>
           </form>
         </div>
       </div>
