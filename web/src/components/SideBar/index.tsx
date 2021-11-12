@@ -1,4 +1,4 @@
-import { FiAward, FiSliders } from 'react-icons/fi';
+import { FiAward, FiSliders, FiUserCheck } from 'react-icons/fi';
 import { RiDashboardLine } from 'react-icons/ri';
 import { Link, NavLink } from 'react-router-dom';
 
@@ -30,6 +30,17 @@ export function SideBar(): JSX.Element {
           path: '/admins',
           title: 'Listar Admins',
           icon: <FiSliders />,
+          exact: false,
+        },
+      ],
+    },
+    {
+      title: 'USUÁRIOS',
+      links: [
+        {
+          path: '/users',
+          title: 'Listar Usuários',
+          icon: <FiUserCheck />,
           exact: false,
         },
       ],

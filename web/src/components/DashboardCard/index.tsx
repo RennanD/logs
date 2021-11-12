@@ -21,7 +21,7 @@ export function DashboardCard({
   return (
     <Link to={link}>
       <article className={styles.container}>
-        <Icon size={40} />
+        <Icon size={32} />
         <div>
           <strong>{title}</strong>
           <p>{subtitle}</p>
