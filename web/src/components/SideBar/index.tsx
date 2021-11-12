@@ -1,4 +1,5 @@
-import { RiDashboardLine, RiUserLine, RiGroupLine } from 'react-icons/ri';
+import { FiAward, FiSliders } from 'react-icons/fi';
+import { RiDashboardLine } from 'react-icons/ri';
 import { Link, NavLink } from 'react-router-dom';
 
 import styles from './styles.module.scss';
@@ -22,13 +23,13 @@ export function SideBar(): JSX.Element {
         {
           path: '/students',
           title: 'Listar Alunos',
-          icon: <RiUserLine />,
+          icon: <FiAward />,
           exact: false,
         },
         {
           path: '/admins',
           title: 'Listar Admins',
-          icon: <RiGroupLine />,
+          icon: <FiSliders />,
           exact: false,
         },
       ],
@@ -46,7 +47,7 @@ export function SideBar(): JSX.Element {
       {navigation.map(navItem => (
         <>
           <section key={navItem.title}>
-            <strong>GERAL</strong>
+            <strong>{navItem.title}</strong>
             <ul>
               {navItem.links.map(link => (
                 <li key={link.path}>

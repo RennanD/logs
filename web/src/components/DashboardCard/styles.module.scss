@@ -1,0 +1,35 @@
+.container {
+  display: flex;
+  align-items: flex-start;
+
+  background-color: var(--gray80);
+
+  padding: 30px 20px;
+  border-radius: 8px;
+
+  border: 2px solid var(--gray80);
+
+  transition: border 0.2s, transform 0.2s;
+
+  strong {
+    font-size: 24px;
+    color: var(--gray5);
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  p {
+    color: var(--gray20);
+    line-height: 24px;
+  }
+
+  svg {
+    margin-right: 20px;
+    stroke: var(--yellow90);
+  }
+
+  &:hover {
+    border: 2px solid var(--yellow90);
+    transform: translateY(-7px);
+  }
+}

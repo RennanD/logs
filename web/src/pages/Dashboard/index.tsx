@@ -1,19 +1,11 @@
-import { useHistory } from 'react-router-dom';
-
+import { FiAward, FiSliders, FiUserCheck } from 'react-icons/fi';
 import styles from './styles.module.scss';
 
 import heroImage from '../../assets/logs.svg';
-import usersImage from '../../assets/users.svg';
-import studentsImage from '../../assets/students.svg';
-import adminsImage from '../../assets/admins.svg';
+
+import { DashboardCard } from '../../components/DashboardCard';
 
 export function Dashboard(): JSX.Element {
-  const history = useHistory();
-
-  function handleNavigate(route: string) {
-    history.push(route);
-  }
-
   return (
     <div className={styles.container}>
       <header className={styles.heahderContent}>
@@ -30,50 +22,31 @@ export function Dashboard(): JSX.Element {
       </header>
 
       <main className={styles.mainContent}>
-        <ul>
-          <li>
-            <header>
-              <img src={usersImage} alt="Usuários" />
-            </header>
-            <div>
-              <strong>Usuários</strong>
-              <span>Controle e adicione acessos à plataforma</span>
-            </div>
-            <footer>
-              <button disabled type="button">
-                Acessar
-              </button>
-            </footer>
-          </li>
+        <section>
+          <h1>Visão Geral</h1>
+          <div>
+            <DashboardCard
+              icon={FiAward}
+              title="Alunos"
+              link="/students"
+              subtitle="Monitore acessos dos alunos ao Keep Edu"
+            />
 
-          <li>
-            <header>
-              <img src={studentsImage} alt="Alunos" />
-            </header>
-            <div>
-              <strong>Alunos</strong>
-              <span>Monitorar acesso dos alunos ao sistema</span>
-            </div>
-            <footer>
-              <button onClick={() => handleNavigate('/students')} type="button">
-                Acessar
-              </button>
-            </footer>
-          </li>
+            <DashboardCard
+              icon={FiSliders}
+              title="Gestores"
+              link="/admins"
+              subtitle="Monitorar acesso dos gestores ao Keep Edu"
+            />
 
-          <li>
-            <header>
-              <img src={adminsImage} alt="Alunos" />
-            </header>
-            <div>
-              <strong>Gestores</strong>
-              <span>Monitorar acesso dos alunos ao sistema</span>
-            </div>
-            <footer>
-              <button type="button">Acessar</button>
-            </footer>
-          </li>
-        </ul>
+            <DashboardCard
+              icon={FiUserCheck}
+              title="Usuários"
+              link="/users"
+              subtitle="Controle e adicione acessos à plataforma"
+            />
+          </div>
+        </section>
       </main>
     </div>
   );
