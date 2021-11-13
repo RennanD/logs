@@ -1,6 +1,7 @@
 import { Switch } from 'react-router-dom';
 import { Dashboard } from '../pages/Dashboard';
 import { ListUsers } from '../pages/ListUsers';
+import { NotFoundPage } from '../pages/NotFoundPage';
 import { SignIn } from '../pages/SignIn';
 import { Students } from '../pages/Students';
 import { StudentsLogs } from '../pages/StudentsLogs';
@@ -31,6 +32,8 @@ export function AppRoutes(): JSX.Element {
         isPrivate
         permission="list_users"
       />
+
+      <Route path="*" component={NotFoundPage} isPrivate />
     </Switch>
   );
 }
