@@ -32,7 +32,7 @@ export function SignIn(): JSX.Element {
             <h1>
               Entrar <span>.</span>
             </h1>
-            <span>Faça logins para acessar os logs do sistema</span>
+            <span>Faça login para acessar os logs do sistema</span>
             <section>
               <TextInput
                 icon={FiMail}

@@ -1,5 +1,10 @@
 import { useState, useContext, ReactNode, createContext } from 'react';
+import { AxiosError } from 'axios';
 import { api } from '../services/api';
+
+type AxiosErrorResponse = {
+  error: string;
+};
 
 type SingInProps = {
   email: string;
@@ -23,6 +28,7 @@ type User = {
 interface AuthContextData {
   user: User;
   signIn: (singInData: SingInProps) => Promise<void>;
+  singOut: () => void;
 }
 
 interface AuthProviderProps {
@@ -66,12 +72,23 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
       setUser(dataUser);
       api.defaults.headers.common.authorization = `Bearer ${token}`;
     } catch (error) {
-      throw new Error(error);
+      const { response } = error as AxiosError<AxiosErrorResponse>;
+
+      throw new Error(response?.data.error);
     }
   }
 
+  function handleSignOut() {
+    localStorage.removeItem('@log-monitor:user');
+    localStorage.removeItem('@log-monitor:token');
+
+    setUser({} as User);
+  }
+
   return (
-    <AuthContext.Provider value={{ user, signIn: handleSingIn }}>
+    <AuthContext.Provider
+      value={{ user, signIn: handleSingIn, singOut: handleSignOut }}
+    >
       {children}
     </AuthContext.Provider>
   );

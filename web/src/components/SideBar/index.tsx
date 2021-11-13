@@ -12,7 +12,7 @@ export function SideBar(): JSX.Element {
         {
           path: '/',
           title: 'Dashboard',
-          icon: <RiDashboardLine />,
+          icon: <RiDashboardLine size={20} />,
           exact: true,
         },
       ],
@@ -23,13 +23,13 @@ export function SideBar(): JSX.Element {
         {
           path: '/students',
           title: 'Listar Alunos',
-          icon: <FiAward />,
+          icon: <FiAward size={20} />,
           exact: false,
         },
         {
           path: '/admins',
           title: 'Listar Admins',
-          icon: <FiSliders />,
+          icon: <FiSliders size={20} />,
           exact: false,
         },
       ],
@@ -40,7 +40,7 @@ export function SideBar(): JSX.Element {
         {
           path: '/users',
           title: 'Listar Usuários',
-          icon: <FiUserCheck />,
+          icon: <FiUserCheck size={20} />,
           exact: false,
         },
       ],
