@@ -20,7 +20,8 @@ export class UsersRepositoryMongoose implements IUsersRepository {
     })
       .select('name email avatar')
       .skip(Number(params?.offset) || 0)
-      .limit(Number(params?.limit) || 10);
+      .limit(Number(params?.limit) || 10)
+      .populate('role', 'title');
   }
 
   async findById(id: string): Promise<IUserSchema | null> {
@@ -31,7 +32,7 @@ export class UsersRepositoryMongoose implements IUsersRepository {
     return User.findOne({ email }).populate('role');
   }
 
-  async countAll(search: string): Promise<number> {
+  async countAll(search?: string): Promise<number> {
     return User.find({
       $or: [
         { name: { $regex: search || '', $options: 'i' } },

@@ -14,7 +14,7 @@ export interface IUsersRepository {
 
   findByEmail(email: string): Promise<IUserSchema | null>;
 
-  countAll(search: string): Promise<number>;
+  countAll(search?: string): Promise<number>;
 
   create(userData: ICreateUsersDTO): Promise<void>;
 

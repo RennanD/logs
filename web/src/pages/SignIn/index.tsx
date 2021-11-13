@@ -39,6 +39,7 @@ export function SignIn(): JSX.Element {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="Digite seu email..."
+                type="email"
               />
 
               <TextInput

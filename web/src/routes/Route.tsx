@@ -6,16 +6,30 @@ import { useAuth } from '../hooks/auth';
 import { AuthLayout } from '../pages/_layouts/auth';
 import { DefaultLayout } from '../pages/_layouts/defautl';
 
+type IPermissions =
+  | 'create_users'
+  | 'edit_users'
+  | 'create_roles'
+  | 'edit_roles'
+  | 'import_logs'
+  | 'list_student_logs'
+  | 'list_permissions'
+  | 'list_users'
+  | 'list_admins_logs'
+  | 'list_roles'
+  | 'create_permissions'
+  | 'edit_permissions';
+
 interface CreateRouteProps extends Omit<RouteProps, 'component'> {
   component: React.ElementType;
   isPrivate?: boolean;
-  permission?: string;
+  permission?: IPermissions;
 }
 
 export function CreateRoute({
   isPrivate = false,
   component: Component,
-  permission = '',
+  permission,
   ...rest
 }: CreateRouteProps): JSX.Element {
   const { user } = useAuth();
