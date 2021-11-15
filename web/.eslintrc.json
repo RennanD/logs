@@ -28,6 +28,7 @@
     "react-hooks/rules-of-hooks": "error",
     "react/jsx-no-bind": "off",
     "jsx-a11y/img-redundant-alt": "off",
+    "react/prop-types": "off",
     "react-hooks/exhaustive-deps": "warn",
     "import/prefer-default-export": "off",
     "jsx-a11y/label-has-associated-control": "off",

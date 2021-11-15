@@ -5,6 +5,11 @@ import styles from './styles.module.scss';
 import { TextInput } from '../../components/TextInput';
 import { Button } from '../../components/Button';
 import { useAuth } from '../../hooks/auth';
+import { useToast } from '../../hooks/toast';
+
+type ErrorProps = {
+  message: string;
+};
 
 export function SignIn(): JSX.Element {
   const [email, setEmail] = useState('');
@@ -12,6 +17,7 @@ export function SignIn(): JSX.Element {
   const [loading, setLoading] = useState(false);
 
   const { signIn } = useAuth();
+  const { addToast } = useToast();
 
   async function handleLogin(event: FormEvent) {
     setLoading(true);
@@ -20,7 +26,10 @@ export function SignIn(): JSX.Element {
     try {
       await signIn({ email, password });
     } catch (error) {
+      const err = error as ErrorProps;
+
       setLoading(false);
+      addToast({ description: err.message, type: 'error' });
     }
   }
 
