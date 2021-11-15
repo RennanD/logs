@@ -37,6 +37,7 @@ export function SignIn(): JSX.Element {
               <TextInput
                 icon={FiMail}
                 value={email}
+                name="email"
                 onChange={e => setEmail(e.target.value)}
                 placeholder="Digite seu email..."
                 type="email"

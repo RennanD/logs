@@ -1,4 +1,5 @@
 import { Switch } from 'react-router-dom';
+import { CreateUser } from '../pages/CreateUser';
 import { Dashboard } from '../pages/Dashboard';
 import { ListUsers } from '../pages/ListUsers';
 import { NotFoundPage } from '../pages/NotFoundPage';
@@ -28,9 +29,17 @@ export function AppRoutes(): JSX.Element {
       />
       <Route
         path="/users"
+        exact
         component={ListUsers}
         isPrivate
         permission="list_users"
+      />
+
+      <Route
+        path="/users/create"
+        component={CreateUser}
+        isPrivate
+        permission="create_users"
       />
 
       <Route path="*" component={NotFoundPage} isPrivate />

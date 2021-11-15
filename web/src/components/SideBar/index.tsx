@@ -1,4 +1,4 @@
-import { FiAward, FiSliders, FiUserCheck } from 'react-icons/fi';
+import { FiAward, FiSliders, FiUserCheck, FiUserPlus } from 'react-icons/fi';
 import { RiDashboardLine } from 'react-icons/ri';
 import { Link, NavLink } from 'react-router-dom';
 
@@ -41,6 +41,12 @@ export function SideBar(): JSX.Element {
           path: '/users',
           title: 'Listar Usuários',
           icon: <FiUserCheck size={20} />,
+          exact: true,
+        },
+        {
+          path: '/users/create',
+          title: 'Cadastrar Usuário',
+          icon: <FiUserPlus size={20} />,
           exact: false,
         },
       ],
@@ -55,13 +61,13 @@ export function SideBar(): JSX.Element {
         </h1>
       </Link>
 
-      {navigation.map(navItem => (
-        <>
-          <section key={navItem.title}>
+      {navigation.map((navItem, navIndex) => (
+        <article key={String(navIndex)}>
+          <section>
             <strong>{navItem.title}</strong>
             <ul>
-              {navItem.links.map(link => (
-                <li key={link.path}>
+              {navItem.links.map((link, index) => (
+                <li key={String(index)}>
                   <NavLink
                     exact={link.exact}
                     activeStyle={{
@@ -76,7 +82,7 @@ export function SideBar(): JSX.Element {
               ))}
             </ul>
           </section>
-        </>
+        </article>
       ))}
     </aside>
   );
