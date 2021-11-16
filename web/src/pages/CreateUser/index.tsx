@@ -1,5 +1,9 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+
+import { FormHandles } from '@unform/core';
+import { Form } from '@unform/web';
+import * as Yup from 'yup';
 
 import {
   FiArrowLeft,
@@ -16,6 +20,7 @@ import { useToast } from '../../hooks/toast';
 import { api, AxiosError } from '../../services/api';
 
 import styles from './styles.module.scss';
+import getValidationErros from '../../utils/getValidationErrors';
 
 type AxiosResponse = {
   result: {
@@ -29,28 +34,52 @@ type RoleProps = {
   value: string;
 };
 
-export function CreateUser(): JSX.Element {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordConfirmation, setPasswordConfirmation] = useState('');
-  const [loading, setLoading] = useState(false);
+type FormData = {
+  name: string;
+  email: string;
+  password: string;
+  passwordConfirmation: string;
+  role: string;
+};
 
-  const [role, setRole] = useState('');
+export function CreateUser(): JSX.Element {
+  const [loading, setLoading] = useState(false);
   const [roles, setRoles] = useState<RoleProps[]>([]);
+
+  const formRef = useRef<FormHandles>(null);
 
   const { addToast } = useToast();
 
-  async function handleCreateUser(event: FormEvent) {
-    event.preventDefault();
+  async function handleCreateUser(data: FormData) {
+    formRef.current?.setErrors({});
     setLoading(true);
 
-    if (password !== passwordConfirmation) {
-      addToast({ description: 'As senhas não conferem', type: 'error' });
-      return;
-    }
+    const schema = Yup.object().shape({
+      name: Yup.string().required('O nome é obrigatório'),
+      email: Yup.string()
+        .email('Digite um e-mail válido')
+        .required('O e-mail é obrigatório'),
+      password: Yup.string().min(6, 'A senha precisa de no mínimo 6 digitos'),
+      passwordConfirmation: Yup.string().required(
+        'A senha confirmação de senha é obrigatória',
+      ),
+      role: Yup.string().required('O perfil é obrigatório'),
+    });
 
     try {
+      await schema.validate(data, {
+        abortEarly: false,
+      });
+
+      if (data.password !== data.passwordConfirmation) {
+        formRef.current?.setErrors({
+          passwordConfirmation: 'As senhas não conferem',
+        });
+        return;
+      }
+
+      const { email, name, password, role } = data;
+
       await api.post('/users', {
         email,
         name,
@@ -60,7 +89,15 @@ export function CreateUser(): JSX.Element {
 
       setLoading(false);
       addToast({ description: 'Usáurio criado com sucesso', type: 'success' });
+      formRef.current?.reset();
     } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        const errors = getValidationErros(error);
+        formRef.current?.setErrors(errors);
+        setLoading(false);
+        return;
+      }
+
       const err = error as AxiosError;
       setLoading(false);
       addToast({ description: err.response.data.error, type: 'error' });
@@ -89,53 +126,48 @@ export function CreateUser(): JSX.Element {
             <h2>Cadastro de usuário</h2>
           </article>
         </header>
-        <form onSubmit={handleCreateUser}>
+        <Form ref={formRef} onSubmit={handleCreateUser}>
           <section>
-            <label htmlFor="">Nome</label>
             <TextInput
+              label="Nome"
+              name="name"
               icon={FiUser}
-              value={name}
-              onChange={e => setName(e.target.value)}
               placeholder="Digite o nome..."
             />
 
-            <label htmlFor="">E-mail</label>
             <TextInput
+              label="E-mail"
+              name="email"
               icon={FiMail}
-              value={email}
-              onChange={e => setEmail(e.target.value)}
               placeholder="Digite o e-mail..."
               type="email"
             />
 
             <div className={styles.passwordContent}>
               <div>
-                <label htmlFor="">Senha</label>
                 <TextInput
+                  name="password"
+                  label="Senha"
                   icon={FiLock}
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
                   placeholder="Digite a senha..."
                   type="password"
                 />
               </div>
               <div>
-                <label htmlFor="">Confirmação de senha</label>
                 <TextInput
+                  label="Confirmação de senha"
+                  name="passwordConfirmation"
                   icon={FiLock}
-                  value={passwordConfirmation}
-                  onChange={e => setPasswordConfirmation(e.target.value)}
                   placeholder="Confirme senha..."
                   type="password"
                 />
               </div>
             </div>
 
-            <label htmlFor="">E-mail</label>
             <SelectInput
+              name="role"
+              label="Perfil"
               icon={FiSettings}
-              value={role}
-              onChange={e => setRole(e.target.value)}
               options={roles}
             />
 
@@ -143,7 +175,7 @@ export function CreateUser(): JSX.Element {
               <Button loading={loading}>Cadastrar</Button>
             </div>
           </section>
-        </form>
+        </Form>
       </main>
     </div>
   );
