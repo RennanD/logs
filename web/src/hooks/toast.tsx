@@ -39,8 +39,8 @@ export function ToastProvider({ children }: ToastProviderProps): JSX.Element {
     <ToastContext.Provider
       value={{ addToast: handleAddToast, removeToast: handleRemoveToast }}
     >
-      <ToastContainer messages={messages} />
       {children}
+      <ToastContainer messages={messages} />
     </ToastContext.Provider>
   );
 }

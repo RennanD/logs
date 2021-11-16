@@ -1,4 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+
 import {
   FiArrowLeft,
   FiLock,
@@ -6,11 +8,13 @@ import {
   FiSettings,
   FiUser,
 } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+
 import { Button } from '../../components/Button';
 import { SelectInput } from '../../components/SelectInput';
 import { TextInput } from '../../components/TextInput';
-import { api } from '../../services/api';
+import { useToast } from '../../hooks/toast';
+import { api, AxiosError } from '../../services/api';
+
 import styles from './styles.module.scss';
 
 type AxiosResponse = {
@@ -35,12 +39,14 @@ export function CreateUser(): JSX.Element {
   const [role, setRole] = useState('');
   const [roles, setRoles] = useState<RoleProps[]>([]);
 
+  const { addToast } = useToast();
+
   async function handleCreateUser(event: FormEvent) {
     event.preventDefault();
     setLoading(true);
 
     if (password !== passwordConfirmation) {
-      alert('As senhas não conferem');
+      addToast({ description: 'As senhas não conferem', type: 'error' });
       return;
     }
 
@@ -53,9 +59,11 @@ export function CreateUser(): JSX.Element {
       });
 
       setLoading(false);
+      addToast({ description: 'Usáurio criado com sucesso', type: 'success' });
     } catch (error) {
+      const err = error as AxiosError;
       setLoading(false);
-      console.log(error);
+      addToast({ description: err.response.data.error, type: 'error' });
     }
   }
 

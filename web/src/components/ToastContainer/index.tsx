@@ -22,12 +22,13 @@ export function ToastContainer({ messages }: ToastConatinerProps): JSX.Element {
   });
 
   return (
-    <div>
+    <div className={styles.container}>
       {messagesWithTransitions(({ opacity }, item) => (
         <animated.div
-          className={styles.container}
+          style={{
+            opacity,
+          }}
           key={item.id}
-          style={{ opacity, position: 'absolute' }}
         >
           <Toast message={item} />
         </animated.div>
