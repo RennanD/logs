@@ -26,6 +26,7 @@
   "rules": {
     "prettier/prettier": "error",
     "react-hooks/rules-of-hooks": "error",
+    "@typescript-eslint/no-non-null-assertion": "off",
     "react/jsx-no-bind": "off",
     "jsx-a11y/img-redundant-alt": "off",
     "react/prop-types": "off",

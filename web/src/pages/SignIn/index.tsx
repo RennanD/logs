@@ -1,31 +1,62 @@
-import { FormEvent, useState } from 'react';
+import { useRef, useState } from 'react';
 import { FiLock, FiMail } from 'react-icons/fi';
+
+import { Form } from '@unform/web';
+import { FormHandles } from '@unform/core';
+import * as Yup from 'yup';
+
 import styles from './styles.module.scss';
 
 import { TextInput } from '../../components/TextInput';
 import { Button } from '../../components/Button';
 import { useAuth } from '../../hooks/auth';
 import { useToast } from '../../hooks/toast';
+import getValidationErros from '../../utils/getValidationErrors';
 
 type ErrorProps = {
   message: string;
 };
 
+type FormData = {
+  email: string;
+  password: string;
+};
+
 export function SignIn(): JSX.Element {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const formRef = useRef<FormHandles>(null);
 
   const { signIn } = useAuth();
   const { addToast } = useToast();
 
-  async function handleLogin(event: FormEvent) {
+  async function handleLogin(data: FormData) {
     setLoading(true);
-    event.preventDefault();
+    formRef.current?.setErrors({});
+
+    const schema = Yup.object().shape({
+      email: Yup.string()
+        .email('Digite um e-mail válido')
+        .required('O e-mail é obrigatório'),
+      password: Yup.string().required('A senha é obrigatória'),
+    });
 
     try {
+      await schema.validate(data, {
+        abortEarly: false,
+      });
+
+      const { email, password } = data;
+
       await signIn({ email, password });
     } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        const errors = getValidationErros(error);
+        formRef.current?.setErrors(errors);
+        setLoading(false);
+        return;
+      }
+
       const err = error as ErrorProps;
 
       setLoading(false);
@@ -37,32 +68,31 @@ export function SignIn(): JSX.Element {
     <div className={styles.container}>
       <div className={styles.content}>
         <div className={styles.animationContainer}>
-          <form onSubmit={handleLogin}>
+          <Form ref={formRef} onSubmit={handleLogin}>
             <h1>
               Entrar <span>.</span>
             </h1>
             <span>Faça login para acessar os logs do sistema</span>
             <section>
               <TextInput
+                label="E-mail"
                 icon={FiMail}
-                value={email}
                 name="email"
-                onChange={e => setEmail(e.target.value)}
                 placeholder="Digite seu email..."
                 type="email"
               />
 
               <TextInput
+                label="Senha"
+                name="password"
                 icon={FiLock}
-                value={password}
-                onChange={e => setPassword(e.target.value)}
                 placeholder="Digite sua senha..."
                 type="password"
               />
             </section>
 
             <Button loading={loading}>Entrar</Button>
-          </form>
+          </Form>
         </div>
       </div>
       <div className={styles.background} />
