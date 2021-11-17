@@ -14,18 +14,32 @@
   select {
     flex: 1;
     background-color: transparent;
-    color: var(--gray5);
+   
     border: 0;
     height: 100%;
 
     font-size: 18px;
-    
 
+    option {
+      color: var(--gray80);
+
+      &:disabled {
+        color: var(--gray50);
+      }
+    }
   }
 
   svg {
     margin-right: 16px;
   }
+}
+
+.hasPlaceholder {
+  color: var(--gray40);
+}
+
+.selected {
+  color: var(--gray5);
 }
 
 .inputLabel {

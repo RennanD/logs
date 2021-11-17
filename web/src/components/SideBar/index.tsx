@@ -1,4 +1,10 @@
-import { FiAward, FiSliders, FiUserCheck, FiUserPlus } from 'react-icons/fi';
+import {
+  FiAward,
+  FiShield,
+  FiSliders,
+  FiUserCheck,
+  FiUserPlus,
+} from 'react-icons/fi';
 import { RiDashboardLine } from 'react-icons/ri';
 import { Link, NavLink } from 'react-router-dom';
 
@@ -48,6 +54,17 @@ export function SideBar(): JSX.Element {
           title: 'Cadastrar Usuário',
           icon: <FiUserPlus size={20} />,
           exact: false,
+        },
+      ],
+    },
+    {
+      title: 'PERFIS',
+      links: [
+        {
+          path: '/roles/create',
+          title: 'Criar Perfil',
+          icon: <FiShield size={20} />,
+          exact: true,
         },
       ],
     },

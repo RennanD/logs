@@ -65,6 +65,7 @@ export function SelectInput({
         />
         <select
           {...rest}
+          className={`${!inputValue ? styles.hasPlaceholder : styles.selected}`}
           defaultValue={defaultValue}
           onChange={event => handleChange(event.target.value)}
         >

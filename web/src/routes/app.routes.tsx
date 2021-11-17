@@ -1,4 +1,5 @@
 import { Switch } from 'react-router-dom';
+import { CreateRoles } from '../pages/CreateRoles';
 import { CreateUser } from '../pages/CreateUser';
 import { Dashboard } from '../pages/Dashboard';
 import { ListUsers } from '../pages/ListUsers';
@@ -27,6 +28,7 @@ export function AppRoutes(): JSX.Element {
         isPrivate
         permission="list_student_logs"
       />
+
       <Route
         path="/users"
         exact
@@ -34,12 +36,18 @@ export function AppRoutes(): JSX.Element {
         isPrivate
         permission="list_users"
       />
-
       <Route
         path="/users/create"
         component={CreateUser}
         isPrivate
         permission="create_users"
+      />
+
+      <Route
+        path="/roles/create"
+        component={CreateRoles}
+        isPrivate
+        permission="create_roles"
       />
 
       <Route path="*" component={NotFoundPage} isPrivate />

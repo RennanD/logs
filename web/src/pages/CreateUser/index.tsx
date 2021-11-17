@@ -127,54 +127,52 @@ export function CreateUser(): JSX.Element {
           </article>
         </header>
         <Form ref={formRef} onSubmit={handleCreateUser}>
-          <section>
-            <TextInput
-              label="Nome"
-              name="name"
-              icon={FiUser}
-              placeholder="Digite o nome..."
-            />
+          <TextInput
+            label="Nome"
+            name="name"
+            icon={FiUser}
+            placeholder="Digite o nome..."
+          />
 
-            <TextInput
-              label="E-mail"
-              name="email"
-              icon={FiMail}
-              placeholder="Digite o e-mail..."
-              type="email"
-            />
+          <TextInput
+            label="E-mail"
+            name="email"
+            icon={FiMail}
+            placeholder="Digite o e-mail..."
+            type="email"
+          />
 
-            <div className={styles.passwordContent}>
-              <div>
-                <TextInput
-                  name="password"
-                  label="Senha"
-                  icon={FiLock}
-                  placeholder="Digite a senha..."
-                  type="password"
-                />
-              </div>
-              <div>
-                <TextInput
-                  label="Confirmação de senha"
-                  name="passwordConfirmation"
-                  icon={FiLock}
-                  placeholder="Confirme senha..."
-                  type="password"
-                />
-              </div>
+          <div className={styles.passwordContent}>
+            <div>
+              <TextInput
+                name="password"
+                label="Senha"
+                icon={FiLock}
+                placeholder="Digite a senha..."
+                type="password"
+              />
             </div>
-
-            <SelectInput
-              name="role"
-              label="Perfil"
-              icon={FiSettings}
-              options={roles}
-            />
-
-            <div className={styles.buttonContainer}>
-              <Button loading={loading}>Cadastrar</Button>
+            <div>
+              <TextInput
+                label="Confirmação de senha"
+                name="passwordConfirmation"
+                icon={FiLock}
+                placeholder="Confirme senha..."
+                type="password"
+              />
             </div>
-          </section>
+          </div>
+
+          <SelectInput
+            name="role"
+            label="Perfil"
+            icon={FiSettings}
+            options={roles}
+          />
+
+          <div className={styles.buttonContainer}>
+            <Button loading={loading}>Cadastrar</Button>
+          </div>
         </Form>
       </main>
     </div>
