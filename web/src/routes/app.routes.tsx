@@ -4,6 +4,7 @@ import { CreateUser } from '../pages/CreateUser';
 import { Dashboard } from '../pages/Dashboard';
 import { ListUsers } from '../pages/ListUsers';
 import { NotFoundPage } from '../pages/NotFoundPage';
+import { ShowUser } from '../pages/ShowUser';
 import { SignIn } from '../pages/SignIn';
 import { Students } from '../pages/Students';
 import { StudentsLogs } from '../pages/StudentsLogs';
@@ -33,6 +34,13 @@ export function AppRoutes(): JSX.Element {
         path="/users"
         exact
         component={ListUsers}
+        isPrivate
+        permission="list_users"
+      />
+      <Route
+        path="/users/:user_id/details"
+        exact
+        component={ShowUser}
         isPrivate
         permission="list_users"
       />

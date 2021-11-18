@@ -1,0 +1,36 @@
+.container {
+  max-width: 1500px;
+  max-height: 100vh;
+  margin: 50px auto;
+  
+}
+
+.mainContent {
+  background-color: var(--gray80);
+  padding: 20px;
+  border-radius: 8px;
+
+  header {
+    
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 30px;
+    
+    article {
+      display: flex;
+      align-items: flex-start;
+
+      a {
+        color: var(--yellow90);
+        margin-right: 20px;
+      }
+    }
+  }
+
+}
+
+.buttonContainer {
+  margin-top: 40px;
+}

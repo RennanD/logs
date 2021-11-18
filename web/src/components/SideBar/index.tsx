@@ -100,10 +100,10 @@ export function SideBar(): JSX.Element {
       </Link>
 
       {navigation.map((navItem, navIndex) => (
-        <>
+        <div key={String(navIndex)}>
           {(!navItem.permissions.length ||
             userCanSeeList(navItem.permissions)) && (
-            <article key={String(navIndex)}>
+            <article>
               <section>
                 <strong>{navItem.title}</strong>
                 <ul>
@@ -130,7 +130,7 @@ export function SideBar(): JSX.Element {
               </section>
             </article>
           )}
-        </>
+        </div>
       ))}
     </aside>
   );

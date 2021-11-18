@@ -104,7 +104,7 @@ export function ListUsers(): JSX.Element {
                     <td>{user.role.title}</td>
                     <td>
                       <div>
-                        <Link to="/users">
+                        <Link to={`/users/${user._id}/details`}>
                           <FiEye size={16} />
                           Visualizar
                         </Link>

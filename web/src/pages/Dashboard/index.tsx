@@ -17,8 +17,8 @@ export function Dashboard(): JSX.Element {
           <strong>Olá, {user.name}!</strong>
           <span>
             Bem vindo ao módulo de logs do sistema! <br />
-            Aqui você poderá monitorar de forma rápida e fácil os acessos de
-            alunos e gestores no Keep Edu.
+            Aqui você poderá monitorar de forma rápida e fácil os acessos ao
+            Keep Edu.
           </span>
         </div>
 

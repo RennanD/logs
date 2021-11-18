@@ -47,6 +47,7 @@
     "for-direction": "off",
     "react/require-default-props": "off",
     "react/button-has-type": "off",
+    "no-param-reassign": "off",
     "react/jsx-props-no-spreading": "off",
     "@typescript-eslint/no-use-before-define": [
       "error"

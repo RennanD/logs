@@ -23,6 +23,10 @@ interface SelectInputProps extends InputHTMLAttributes<HTMLSelectElement> {
   options: OptionProps[];
 }
 
+interface InputReferenceValue {
+  value: string;
+}
+
 export function SelectInput({
   icon: Icon,
   name,
@@ -31,27 +35,32 @@ export function SelectInput({
   ...rest
 }: SelectInputProps): JSX.Element {
   const { fieldName, defaultValue = '', error, registerField } = useField(name);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(defaultValue);
 
-  const inputRef = useRef<HTMLSelectElement>(null);
+  const inputRef = useRef<InputReferenceValue>({ value: defaultValue });
 
   useEffect(() => {
     registerField({
       name: fieldName,
-      ref: inputRef.current,
-      getValue: () => {
-        return inputValue;
+      ref: inputRef,
+      getValue: ref => {
+        console.log(ref);
+
+        return ref.current.value;
       },
-      clearValue: () => {
-        setInputValue('');
-        return '';
+      setValue: (ref, value) => {
+        ref.current.value = value;
+      },
+      clearValue: ref => {
+        ref.current.value = '';
       },
     });
-  }, [fieldName, registerField, inputValue]);
+  }, [fieldName, registerField]);
 
-  function handleChange(value: string) {
-    setInputValue(value);
-  }
+  // function handleChange(value: string) {
+  //   inputRef.current.value = value;
+  //   setInputValue(value);
+  // }
 
   return (
     <>
@@ -59,17 +68,15 @@ export function SelectInput({
         {label} {error && <span>{error}</span>}
       </label>
       <div className={`${styles.container} ${error ? styles.inputError : ''}`}>
-        <Icon
-          size={24}
-          color={inputRef.current?.value ? '#FFC312' : '#797d9a'}
-        />
+        <Icon size={24} color={inputValue ? '#FFC312' : '#797d9a'} />
         <select
           {...rest}
           className={`${!inputValue ? styles.hasPlaceholder : styles.selected}`}
+          // defaultChecked={defaultValue}
           defaultValue={defaultValue}
-          onChange={event => handleChange(event.target.value)}
+          // onChange={event => handleChange(event.target.value)}
         >
-          <option value="" disabled selected>
+          <option value="" disabled>
             Selecione
           </option>
           {options.map(option => (
