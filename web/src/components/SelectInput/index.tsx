@@ -35,7 +35,7 @@ export function SelectInput({
   ...rest
 }: SelectInputProps): JSX.Element {
   const { fieldName, defaultValue = '', error, registerField } = useField(name);
-  const [inputValue, setInputValue] = useState(defaultValue);
+  const [inputValue, setInputValue] = useState('');
 
   const inputRef = useRef<InputReferenceValue>({ value: defaultValue });
 
@@ -44,12 +44,12 @@ export function SelectInput({
       name: fieldName,
       ref: inputRef,
       getValue: ref => {
-        console.log(ref);
-
         return ref.current.value;
       },
       setValue: (ref, value) => {
         ref.current.value = value;
+        console.log(value);
+        setInputValue(value as string);
       },
       clearValue: ref => {
         ref.current.value = '';
@@ -57,10 +57,14 @@ export function SelectInput({
     });
   }, [fieldName, registerField]);
 
-  // function handleChange(value: string) {
-  //   inputRef.current.value = value;
-  //   setInputValue(value);
-  // }
+  function handleChange(value: string) {
+    inputRef.current.value = value;
+    setInputValue(value);
+  }
+
+  useEffect(() => {
+    console.log({ inputValue });
+  }, [inputValue]);
 
   return (
     <>
@@ -72,9 +76,9 @@ export function SelectInput({
         <select
           {...rest}
           className={`${!inputValue ? styles.hasPlaceholder : styles.selected}`}
-          // defaultChecked={defaultValue}
-          defaultValue={defaultValue}
-          // onChange={event => handleChange(event.target.value)}
+          value={inputValue}
+          defaultValue={inputValue}
+          onChange={event => handleChange(event.target.value)}
         >
           <option value="" disabled>
             Selecione
