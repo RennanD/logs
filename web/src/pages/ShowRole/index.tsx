@@ -64,16 +64,13 @@ export function ShowRole(): JSX.Element {
 
   const { params } = useRouteMatch<RouteParams>();
 
-  async function handleEditUser(data: FormData) {
+  async function handleEditRole(data: FormData) {
     formRef.current?.setErrors({});
     setLoading(true);
 
     const schema = Yup.object().shape({
-      name: Yup.string().required('O nome é obrigatório'),
-      email: Yup.string()
-        .email('Digite um e-mail válido')
-        .required('O e-mail é obrigatório'),
-      role: Yup.string().required('O perfil é obrigatório'),
+      title: Yup.string().required('O título é obrigatório'),
+      slug: Yup.string().required('O slug é obrigatório'),
     });
 
     try {
@@ -81,9 +78,23 @@ export function ShowRole(): JSX.Element {
         abortEarly: false,
       });
 
+      if (!data.permissions.length) {
+        formRef.current?.setErrors({
+          permissions: 'Selecione as permissões',
+        });
+        return;
+      }
+
       const { title, permissions: dataPermissions, slug } = data;
 
-      addToast({ description: 'Usáurio editado com sucesso', type: 'success' });
+      await api.put(`/roles/${params.role_id}`, {
+        title,
+        slug,
+        permissions: dataPermissions,
+      });
+
+      addToast({ description: 'Perfil editado com sucesso', type: 'success' });
+      setLoading(false);
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
         const errors = getValidationErros(error);
@@ -99,15 +110,20 @@ export function ShowRole(): JSX.Element {
   }
 
   useEffect(() => {
-    api.get<AxiosResponse>('/permissions').then(response => {
-      const options = response.data.result.map(option => ({
-        label: option.title,
-        value: option._id,
-      }));
+    api
+      .get<AxiosResponse>('/permissions')
+      .then(response => {
+        const options = response.data.result.map(option => ({
+          label: option.title,
+          value: option._id,
+        }));
 
-      setPermissions(options);
-    });
-  }, []);
+        setPermissions(options);
+      })
+      .catch((error: AxiosError) => {
+        addToast({ type: 'error', description: error.response.data.error });
+      });
+  }, [addToast]);
 
   useEffect(() => {
     api
@@ -134,7 +150,7 @@ export function ShowRole(): JSX.Element {
             <h2>Detalhes do perfil</h2>
           </article>
         </header>
-        <Form ref={formRef} onSubmit={handleEditUser}>
+        <Form ref={formRef} onSubmit={handleEditRole}>
           <TextInput
             label="Titúlo"
             name="title"

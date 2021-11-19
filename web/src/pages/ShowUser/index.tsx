@@ -111,15 +111,20 @@ export function ShowUser(): JSX.Element {
   }
 
   useEffect(() => {
-    api.get<AxiosResponse>('/roles').then(response => {
-      const options = response.data.result.map(option => ({
-        label: option.title,
-        value: option._id,
-      }));
+    api
+      .get<AxiosResponse>('/roles')
+      .then(response => {
+        const options = response.data.result.map(option => ({
+          label: option.title,
+          value: option._id,
+        }));
 
-      setRoles(options);
-    });
-  }, []);
+        setRoles(options);
+      })
+      .catch((error: AxiosError) => {
+        addToast({ type: 'error', description: error.response.data.error });
+      });
+  }, [addToast]);
 
   useEffect(() => {
     api
