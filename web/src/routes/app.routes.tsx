@@ -1,7 +1,9 @@
 import { Switch } from 'react-router-dom';
+
 import { CreateRoles } from '../pages/CreateRoles';
 import { CreateUser } from '../pages/CreateUser';
 import { Dashboard } from '../pages/Dashboard';
+import { ListRoles } from '../pages/ListRoles';
 import { ListUsers } from '../pages/ListUsers';
 import { NotFoundPage } from '../pages/NotFoundPage';
 import { ShowUser } from '../pages/ShowUser';
@@ -49,6 +51,14 @@ export function AppRoutes(): JSX.Element {
         component={CreateUser}
         isPrivate
         permission="create_users"
+      />
+
+      <Route
+        path="/roles"
+        exact
+        component={ListRoles}
+        isPrivate
+        permission="list_roles"
       />
 
       <Route

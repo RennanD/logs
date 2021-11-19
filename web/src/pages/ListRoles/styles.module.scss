@@ -1,0 +1,132 @@
+.container {
+  max-width: 1500px;
+  max-height: 100vh;
+  margin: 50px auto;
+  
+}
+
+.headerContent {
+  padding: 50px 20px 20px;
+  margin-bottom: 50px;
+
+  a {
+    color: var(--whithe90);
+
+    > h1 span {
+      color: var(--yellow90);
+    }
+  }
+}
+
+.mainContent {
+  background-color: var(--gray80);
+  padding: 20px;
+  border-radius: 8px;
+
+  header {
+    
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 30px;
+    
+    article {
+      display: flex;
+      align-items: flex-start;
+
+      a {
+        color: var(--yellow90);
+        margin-right: 20px;
+      }
+    }
+
+    > div {
+      display: flex;
+      align-items: center;
+      height: 36px;
+      border-radius: 20px;
+      background-color: var(--white100);
+
+      padding: 0 20px;
+
+      input {
+        flex: 1;
+        border: 0;
+        
+      }
+
+      svg {
+        stroke: var(--yellow90);
+      }
+
+    }
+  }
+
+  table {
+    width: 100%;
+    border-spacing: 0;
+
+
+    thead {
+
+      th {
+        padding: 0 20px;
+        color: var(--gray40);
+        text-align: left;
+        font-size: 14px;
+
+        &:nth-child(4) {
+          text-align: right;
+        }
+
+        padding-bottom: 20px;
+        border-bottom: 0.5px solid var(--gray60);
+      }
+    }
+
+    tbody td {
+      margin-top: 20px;
+      text-overflow: ellipsis;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+
+      font-size: 12px;
+
+      padding: 20px;
+      vertical-align: middle;
+      
+      border-bottom: 1px solid var(--gray70);
+
+      &:last-child {
+        border-bottom: 1px solid var(--gray70);
+      }
+
+      div {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
+
+      a {
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+
+        color: var(--yellow90);
+
+        transition: filter 0.2s;
+
+        svg {
+          margin-right: 6px;
+        }
+
+        &:hover {
+          filter: brightness(0.7);
+        }
+      }
+      
+    }
+  }
+}

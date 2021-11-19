@@ -1,5 +1,6 @@
 import {
   FiAward,
+  FiSettings,
   FiShield,
   FiSliders,
   FiUserCheck,
@@ -81,9 +82,16 @@ export function SideBar(): JSX.Element {
       permissions: ['create_roles'],
       links: [
         {
+          path: '/roles',
+          title: 'Listar Perfis',
+          icon: <FiShield size={20} />,
+          exact: true,
+          permission: 'list_roles',
+        },
+        {
           path: '/roles/create',
           title: 'Criar Perfil',
-          icon: <FiShield size={20} />,
+          icon: <FiSettings size={20} />,
           exact: true,
           permission: 'create_roles',
         },
