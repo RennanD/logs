@@ -48,7 +48,6 @@ export function SelectInput({
       },
       setValue: (ref, value) => {
         ref.current.value = value;
-        console.log(value);
         setInputValue(value as string);
       },
       clearValue: ref => {
@@ -62,10 +61,6 @@ export function SelectInput({
     setInputValue(value);
   }
 
-  useEffect(() => {
-    console.log({ inputValue });
-  }, [inputValue]);
-
   return (
     <>
       <label className={styles.inputLabel}>
@@ -77,7 +72,6 @@ export function SelectInput({
           {...rest}
           className={`${!inputValue ? styles.hasPlaceholder : styles.selected}`}
           value={inputValue}
-          defaultValue={inputValue}
           onChange={event => handleChange(event.target.value)}
         >
           <option value="" disabled>

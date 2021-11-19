@@ -13,7 +13,6 @@ import styles from './styles.module.scss';
 
 interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
-
   label: string;
   icon: ComponentType<IconBaseProps>;
 }
@@ -27,10 +26,10 @@ export function TextInput({
 }: TextInputProps): JSX.Element {
   const { fieldName, defaultValue, registerField, error } = useField(name);
 
-  const [isFocused, setIsFocused] = useState(false);
-  const [isFilled, setIsFilled] = useState(false);
-
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const [isFocused, setIsFocused] = useState(false);
+  const [isFilled, setIsFilled] = useState(!!inputRef.current?.value);
 
   function handleInputFocus() {
     setIsFocused(true);
@@ -44,8 +43,17 @@ export function TextInput({
   useEffect(() => {
     registerField({
       name: fieldName,
-      ref: inputRef.current,
-      path: 'value',
+      ref: inputRef,
+      getValue: ref => {
+        return ref.current.value;
+      },
+      setValue: (ref, value) => {
+        ref.current.value = value;
+        setIsFilled(!!value);
+      },
+      clearValue: ref => {
+        ref.current.value = '';
+      },
     });
   }, [fieldName, registerField]);
 

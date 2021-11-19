@@ -5,7 +5,13 @@ import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 
-import { FiArrowLeft, FiMail, FiSettings, FiUser } from 'react-icons/fi';
+import {
+  FiArrowLeft,
+  FiEdit,
+  FiMail,
+  FiSettings,
+  FiUser,
+} from 'react-icons/fi';
 
 import { Button } from '../../components/Button';
 import { SelectInput } from '../../components/SelectInput';
@@ -15,6 +21,8 @@ import { api, AxiosError } from '../../services/api';
 
 import styles from './styles.module.scss';
 import getValidationErros from '../../utils/getValidationErrors';
+import { PermissionContainer } from '../../components/PermissionContainer';
+import { useAuth } from '../../hooks/auth';
 
 type AxiosResponse = {
   result: {
@@ -51,13 +59,15 @@ export function ShowUser(): JSX.Element {
   const [loading, setLoading] = useState(false);
   const [roles, setRoles] = useState<RoleProps[]>([]);
 
+  const { user, singOut } = useAuth();
+
   const formRef = useRef<FormHandles>(null);
 
   const { addToast } = useToast();
 
   const { params } = useRouteMatch<RouteParams>();
 
-  async function handleCreateUser(data: FormData) {
+  async function handleEditUser(data: FormData) {
     formRef.current?.setErrors({});
     setLoading(true);
 
@@ -76,14 +86,16 @@ export function ShowUser(): JSX.Element {
 
       const { name, role } = data;
 
-      await api.post('/users', {
+      await api.put(`/users/${params.user_id}`, {
         name,
         role,
       });
 
       setLoading(false);
+      if (params.user_id === user._id && role) {
+        singOut();
+      }
       addToast({ description: 'Usáurio editado com sucesso', type: 'success' });
-      formRef.current?.reset();
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
         const errors = getValidationErros(error);
@@ -117,24 +129,18 @@ export function ShowUser(): JSX.Element {
       });
   }, [params.user_id]);
 
-  function handleGetData() {
-    const alldata = formRef.current?.getData();
-
-    console.log({ alldata });
-  }
-
   return (
     <div className={styles.container}>
       <main className={styles.mainContent}>
         <header>
           <article>
-            <Link to="/">
+            <Link to="/users">
               <FiArrowLeft size={30} />
             </Link>
-            <h2>Cadastro de usuário</h2>
+            <h2>Detalhes do usuário</h2>
           </article>
         </header>
-        <Form ref={formRef} onSubmit={handleGetData}>
+        <Form ref={formRef} onSubmit={handleEditUser}>
           <TextInput
             label="Nome"
             name="name"
@@ -159,9 +165,13 @@ export function ShowUser(): JSX.Element {
             options={roles}
           />
 
-          <div className={styles.buttonContainer}>
-            <Button loading={loading}>Cadastrar</Button>
-          </div>
+          <PermissionContainer permission="edit_users">
+            <div className={styles.buttonContainer}>
+              <Button icon={FiEdit} loading={loading}>
+                Editar
+              </Button>
+            </div>
+          </PermissionContainer>
         </Form>
       </main>
     </div>

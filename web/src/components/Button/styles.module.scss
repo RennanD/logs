@@ -4,6 +4,10 @@
   background-color: var(--yellow90);
   color: var(--blue90);
 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   border-radius: 8px;
   border: 1px solid var(--yellow90);
 
@@ -14,6 +18,10 @@
 
   transition: filter 0.2s;
 
+  svg {
+    margin-right: 10px;
+  }
+
   &:hover {
     filter: brightness(0.9);
   }
@@ -22,4 +30,23 @@
     opacity: 0.5;
     cursor: not-allowed;
   }
+
+  position: relative;
 }
+
+.loader {
+  border: 6px solid var(--yellow50);
+  border-top: 6px solid var(--gray70);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+
