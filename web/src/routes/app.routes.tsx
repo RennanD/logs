@@ -6,6 +6,7 @@ import { Dashboard } from '../pages/Dashboard';
 import { ListRoles } from '../pages/ListRoles';
 import { ListUsers } from '../pages/ListUsers';
 import { NotFoundPage } from '../pages/NotFoundPage';
+import { ShowRole } from '../pages/ShowRole';
 import { ShowUser } from '../pages/ShowUser';
 import { SignIn } from '../pages/SignIn';
 import { Students } from '../pages/Students';
@@ -57,6 +58,14 @@ export function AppRoutes(): JSX.Element {
         path="/roles"
         exact
         component={ListRoles}
+        isPrivate
+        permission="list_roles"
+      />
+
+      <Route
+        path="/roles/:role_id/details"
+        exact
+        component={ShowRole}
         isPrivate
         permission="list_roles"
       />

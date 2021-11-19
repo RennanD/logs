@@ -23,9 +23,9 @@ type InputReferenceValue = {
 export function Checkbox({ options, label, name }: CheckboxProps): JSX.Element {
   const { registerField, defaultValue = [], error, fieldName } = useField(name);
 
-  const [selectedValues, setSelectedValues] = useState<string[]>(defaultValue);
+  const [selectedValues, setSelectedValues] = useState<string[]>([]);
 
-  const inputRef = useRef<InputReferenceValue>(null);
+  const inputRef = useRef<InputReferenceValue>({ value: defaultValue });
 
   function handleSelectOption(option: string) {
     const findOptionIndex = selectedValues.findIndex(
@@ -37,19 +37,23 @@ export function Checkbox({ options, label, name }: CheckboxProps): JSX.Element {
       return;
     }
 
-    setSelectedValues(oldState => [...oldState, option]);
+    setSelectedValues([...selectedValues, option]);
+    inputRef.current.value = [...selectedValues, option];
   }
 
   useEffect(() => {
     registerField({
       name: fieldName,
-      ref: inputRef.current,
-      getValue: () => {
-        return selectedValues;
+      ref: inputRef,
+      getValue: ref => {
+        return ref.current.value;
       },
-      clearValue: () => {
-        setSelectedValues([]);
-        return '';
+      setValue: (ref, value) => {
+        ref.current.value = value;
+        setSelectedValues(value as string[]);
+      },
+      clearValue: ref => {
+        ref.current.value = '';
       },
     });
   }, [fieldName, registerField, selectedValues]);
