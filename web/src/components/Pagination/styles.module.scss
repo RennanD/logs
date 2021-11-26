@@ -19,16 +19,16 @@
   
       border: 0;
   
-      background-color: var(--gray60);
+      background-color: var(--border-color);
       border-radius: 4px;
 
-      color: var(--gray5);
+      color: var(--heading);
   
       cursor: pointer;
 
       &.activePage {
-        background-color: var(--yellow90);
-        color: var(--gray80);
+        background-color: var(--primary90);
+        color: var(--background-card);
       }
     }
 

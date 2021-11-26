@@ -6,7 +6,7 @@
 }
 
 .mainContent {
-  background-color: var(--gray80);
+  background-color: var(--background-card);
   padding: 20px;
   border-radius: 8px;
 
@@ -23,7 +23,7 @@
       align-items: flex-start;
 
       a {
-        color: var(--yellow90);
+        color: var(--primary90);
         margin-right: 20px;
       }
     }

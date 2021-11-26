@@ -62,6 +62,7 @@ export function CreateRoles(): JSX.Element {
         formRef.current?.setErrors({
           permissions: 'Selecione as permissões',
         });
+        setLoading(false);
         return;
       }
 

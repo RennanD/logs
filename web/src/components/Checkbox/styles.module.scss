@@ -2,10 +2,10 @@
   display: block;
   font-size: 16px;
   margin-bottom: 20px;
-  color: var(--gray10);
+  color: var(--heading);
 
   span {
-    color: #c53030;
+    color: var(--danger90);
     margin-right: 10px;
   }
 }
@@ -44,7 +44,7 @@
 
     span {
       font-size: 18px;
-      color: var(--gray5);
+      color: var(--heading);
     }
 
     &:hover {
@@ -54,13 +54,13 @@
 }
 
 .empty {
-  border: 3px solid var(--gray60);
+  border: 3px solid var(--border-color);
 }
 
 .selected {
-  border: 3px solid var(--yellow90);
+  border: 3px solid var(--primary90);
 
-  background-color: var(--yellow90);
+  background-color: var(--primary90);
   display: flex;
   align-items: center;
   justify-content: center;

@@ -13,13 +13,13 @@
     color: var(--whithe90);
 
     > h1 span {
-      color: var(--yellow90);
+      color: var(--primary90);
     }
   }
 }
 
 .mainContent {
-  background-color: var(--gray80);
+  background-color: var(--background-card);
   padding: 20px;
   border-radius: 8px;
 
@@ -36,7 +36,7 @@
       align-items: flex-start;
 
       a {
-        color: var(--yellow90);
+        color: var(--primary90);
         margin-right: 20px;
       }
     }
@@ -46,7 +46,7 @@
       align-items: center;
       height: 36px;
       border-radius: 20px;
-      background-color: var(--white100);
+      background-color: var(--heading);
 
       padding: 0 20px;
 
@@ -57,7 +57,7 @@
       }
 
       svg {
-        stroke: var(--yellow90);
+        stroke: var(--primary90);
       }
 
     }
@@ -72,7 +72,7 @@
 
       th {
         padding: 0 20px;
-        color: var(--gray40);
+        color: var(--legend);
         text-align: left;
         font-size: 14px;
 
@@ -80,7 +80,7 @@
           text-align: right;
         }
         padding-bottom: 20px;
-        border-bottom: 0.5px solid var(--gray60);
+        border-bottom: 0.5px solid var(--border-color);
       }
     }
 
@@ -95,10 +95,10 @@
       padding: 20px;
       vertical-align: middle;
       
-      border-bottom: 1px solid var(--gray70);
+      border-bottom: 1px solid var(--border-color);
 
       &:last-child {
-        border-bottom: 1px solid var(--gray70);
+        border-bottom: 1px solid var(--border-color);
       }
 
       div {
@@ -113,7 +113,7 @@
         display: flex;
         align-items: center;
 
-        color: var(--yellow90);
+        color: var(--primary90);
 
         transition: filter 0.2s;
 

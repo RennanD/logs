@@ -75,6 +75,7 @@ export function CreateUser(): JSX.Element {
         formRef.current?.setErrors({
           passwordConfirmation: 'As senhas não conferem',
         });
+        setLoading(false);
         return;
       }
 

@@ -22,7 +22,7 @@ export function Toast({ message }: ToastProps): JSX.Element {
   useEffect(() => {
     const timer = setTimeout(() => {
       removeToast(message.id);
-    }, 3000);
+    }, 3200);
 
     return () => {
       clearTimeout(timer);

@@ -1,28 +1,31 @@
 :root {
+  /* 
+  * Novas cores
+  */
+  --heading: #eeeef2;
+  --paragraphy: #d1d2dc;
+  --description: #b3b5c6;
+  --legend: #797d9a;
+  --button: #0C1A32;
+  
   --background-color: #090914;
+  --background-card: #1f2029;
+  --background-scroll: #181b23;
+  --border-color: #353646;
 
-  --gray90: #181b23;
-  --gray80: #1f2029;
-  --gray70: #353646;
-  --gray60: #4b4d63;
-  --gray50: #616480;
-  --gray40: #797d9a;
-  --gray30: #9699b0;
-  --gray20: #b3b5c6;
-  --gray10: #d1d2dc;
-  --gray5: #eeeef2;
+  --primary90: #FFC312;
+  --primary50: #f2d184;
 
-  --white100: #fff;
-  --white90: #f1f5fb;
+  --success90: #28a745;
+  --success50: #e6fffa;
 
-  --blue90: #0C1A32;
-  --blue80: #4f46ba;
-  --blue30: #c1cee5;
+  --danger90: #c53030;
+  --danger50: #fddede;
 
-  --black80: #202020;
+  --info90: #3172b7;
+  --info50: #ebf8ff;
 
-  --yellow90: #FFC312;
-  --yellow50: #f2d184
+  
 }
 
 * {
@@ -34,8 +37,8 @@
 
 
 body {
-  background-color: var(--gray90);
-  color: var(--gray5);
+  background-color: var(--background-scroll);
+  color: var(--heading);
   font-family: Ubuntu, sans-serif;
 }
 
@@ -49,7 +52,7 @@ a {
 
 * {
   scrollbar-width: auto;
-  scrollbar-color: var(--yellow90) var(--gray90);
+  scrollbar-color: var(--primary90) var(--background-scroll);
 }
 
 *::-webkit-scrollbar {
@@ -57,12 +60,12 @@ a {
 }
 
 *::-webkit-scrollbar-track {
-  background: var(--gray90);
+  background: var(--background-scroll);
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: var(--yellow90);
+  background-color: var(--primary90);
   border-radius: 10px;
-  border: 3px solid var(--gray90);
+  border: 3px solid var(--background-scroll);
 }
 

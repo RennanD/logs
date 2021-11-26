@@ -2,34 +2,34 @@
   display: flex;
   align-items: flex-start;
 
-  background-color: var(--gray80);
+  background-color: var(--background-card);
 
   padding: 30px 20px;
   border-radius: 8px;
 
-  border: 2px solid var(--gray80);
+  border: 2px solid var(--background-card);
 
   transition: border 0.2s, transform 0.2s;
 
   strong {
     font-size: 24px;
-    color: var(--gray5);
+    color: var(--heading);
     display: block;
     margin-bottom: 10px;
   }
 
   p {
-    color: var(--gray20);
+    color: var(--description);
     line-height: 24px;
   }
 
   svg {
     margin-right: 20px;
-    stroke: var(--yellow90);
+    stroke: var(--primary90);
   }
 
   &:hover {
-    border: 2px solid var(--yellow90);
+    border: 2px solid var(--primary90);
     transform: translateY(-7px);
   }
 }

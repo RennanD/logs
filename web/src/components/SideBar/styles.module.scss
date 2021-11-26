@@ -5,9 +5,9 @@
   padding: 0 30px;
 
   a {
-    color: var(--gray5);
+    color: var(--heading);
     > h1 span {
-      color: var(--yellow90);
+      color: var(--primary90);
     }
   }
 
@@ -18,7 +18,7 @@
 
     strong {
       font-size: 14px;
-      color: var(--gray40);
+      color: var(--legend);
     }
 
     ul {

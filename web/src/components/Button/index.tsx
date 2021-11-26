@@ -23,7 +23,12 @@ export function Button({
           {children}
         </div>
       ) : (
-        <div className={styles.loader} />
+        <div className={styles.ldsEllipsis}>
+          <div />
+          <div />
+          <div />
+          <div />
+        </div>
       )}
     </button>
   );
