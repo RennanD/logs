@@ -8,9 +8,10 @@
   --legend: #797d9a;
   --button: #0C1A32;
   
-  --background-color: #090914;
+  /* --background-color: #090914; */
   --background-card: #1f2029;
-  --background-scroll: #181b23;
+  --background-color: #181b23;
+  --sidebar-color: #181b23;
   --border-color: #353646;
 
   --primary90: #FFC312;
@@ -37,7 +38,7 @@
 
 
 body {
-  background-color: var(--background-scroll);
+  background-color: var(--background-color);
   color: var(--heading);
   font-family: Ubuntu, sans-serif;
 }
@@ -52,7 +53,7 @@ a {
 
 * {
   scrollbar-width: auto;
-  scrollbar-color: var(--primary90) var(--background-scroll);
+  scrollbar-color: var(--primary90) var(--background-color);
 }
 
 *::-webkit-scrollbar {
@@ -60,12 +61,12 @@ a {
 }
 
 *::-webkit-scrollbar-track {
-  background: var(--background-scroll);
+  background: var(--background-color);
 }
 
 *::-webkit-scrollbar-thumb {
   background-color: var(--primary90);
   border-radius: 10px;
-  border: 3px solid var(--background-scroll);
+  border: 3px solid var(--background-color);
 }
 

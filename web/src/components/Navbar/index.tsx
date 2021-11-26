@@ -1,10 +1,30 @@
+// import { useEffect, useState } from 'react';
 import { FiLogOut, FiMenu } from 'react-icons/fi';
+
+// import Switch from 'react-switch';
+
 import { useAuth } from '../../hooks/auth';
+// import { useTheme } from '../../hooks/theme';
 
 import styles from './styles.module.scss';
 
 export function Navbar(): JSX.Element {
   const { user, singOut } = useAuth();
+  // const { activeTheme, changeTheme } = useTheme();
+
+  // const [switchChecked, setSwitchChecked] = useState(false);
+  // const [switchBackgroudColor, setSwitchBackgroudColor] = useState('');
+
+  // function handleChangeCustomTheme() {
+  //   changeTheme(activeTheme === 'light' ? 'dark' : 'light');
+  //   setSwitchBackgroudColor('#FFC312');
+  //   setSwitchChecked(!switchChecked);
+  // }
+
+  // useEffect(() => {
+  //   setSwitchBackgroudColor('#353646');
+  //   setSwitchChecked(activeTheme === 'dark');
+  // }, [activeTheme]);
 
   return (
     <nav className={styles.container}>
