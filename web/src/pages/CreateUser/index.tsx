@@ -13,13 +13,16 @@ import {
   FiUser,
 } from 'react-icons/fi';
 
+import styles from './styles.module.scss';
+
 import { Button } from '../../components/Button';
 import { SelectInput } from '../../components/SelectInput';
 import { TextInput } from '../../components/TextInput';
-import { useToast } from '../../hooks/toast';
-import { api, AxiosError } from '../../services/api';
 
-import styles from './styles.module.scss';
+import { api, AxiosError } from '../../services/api';
+import { useToast } from '../../hooks/toast';
+import { useAuth } from '../../hooks/auth';
+
 import getValidationErros from '../../utils/getValidationErrors';
 
 type AxiosResponse = {
@@ -49,6 +52,7 @@ export function CreateUser(): JSX.Element {
   const formRef = useRef<FormHandles>(null);
 
   const { addToast } = useToast();
+  const { user } = useAuth();
 
   async function handleCreateUser(data: FormData) {
     formRef.current?.setErrors({});
@@ -112,9 +116,14 @@ export function CreateUser(): JSX.Element {
         value: option._id,
       }));
 
+      if (user.role.slug !== 'root') {
+        setRoles(options.filter(role => role.label !== 'Root'));
+        return;
+      }
+
       setRoles(options);
     });
-  }, []);
+  }, [user]);
 
   return (
     <div className={styles.container}>
